@@ -1,0 +1,232 @@
+﻿using DataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DataAccess.DBContext
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<MedicalHistory> MedicalHistories { get; set; }
+        public DbSet<TestResult> TestResults { get; set; }
+        public DbSet<TestBooking> TestBookings { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<StaffSchedule> StaffSchedules { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<MenstrualCycle> MenstrualCycles { get; set; }
+        public DbSet<Question> Questions { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("User");
+                entity.HasKey(e => e.UserId);
+                entity.Property(e => e.UserId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+                entity.HasIndex(e => e.Email).IsUnique();
+                entity.HasIndex(e => e.Username).IsUnique();
+
+                entity.HasOne(e => e.Role)
+                      .WithMany(u => u.Users)
+                      .HasForeignKey(e => e.RoleId)
+                      .HasConstraintName("FK_User_Role");
+
+                entity.HasMany(e => e.Blogs)
+                      .WithOne(b => b.User)
+                      .HasForeignKey(b => b.UserId)
+                      .HasConstraintName("FK_Blog_User");
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("Role");
+                entity.HasKey(e => e.RoleId);
+                entity.Property(e => e.RoleId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<Service>(entity =>
+            {
+                entity.ToTable("Service");
+                entity.HasKey(e => e.ServiceId);
+                entity.Property(e => e.ServiceName).IsRequired();
+                entity.Property(e => e.ServiceId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasOne(s => s.TestResult)
+                  .WithMany(tr => tr.Services)
+                  .HasForeignKey(s => s.TestResultId)
+                  .OnDelete(DeleteBehavior.NoAction)
+                  .HasConstraintName("FK_Service_TestResult");
+
+                entity.HasOne(s => s.TestBooking)
+                  .WithMany(tb => tb.Services)
+                  .HasForeignKey(s => s.TestBookingId)
+                  .HasConstraintName("FK_Service_TestBooking");
+
+            });
+
+            modelBuilder.Entity<MedicalHistory>(entity =>
+            {
+                entity.ToTable("MedicalHistory");
+                entity.HasKey(e => new { e.MedicallHistoryId });
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.MedicalHistories)
+                      .HasForeignKey(e => e.UserId)
+                      .HasConstraintName("FK_MedicalHistory_User");
+
+                entity.HasOne(e => e.Service)
+                      .WithMany(u => u.MedicalHistories)
+                      .HasForeignKey(e => e.ServiceId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_MedicalHistory_Service");
+
+                
+            });
+
+            modelBuilder.Entity<TestResult>(entity =>
+            {
+                entity.ToTable("TestResult");
+                entity.HasKey(e => e.TestResultId);
+                entity.Property(e => e.TestResultId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.TestResults)
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_TestResult_User");
+
+                entity.HasOne(tr => tr.MedicalHistory)
+                     .WithMany(mh => mh.TestResults)
+                     .HasForeignKey(tr => tr.MedicalHistoryId)
+                     .HasConstraintName("FK_TestResult_MedicalHistory");
+            });
+
+            modelBuilder.Entity<TestBooking>(entity =>
+            {
+                entity.ToTable("TestBooking");
+                entity.HasKey(e => e.TestBookingId);
+                entity.Property(e => e.TestBookingId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.TestBookings)
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_TestBooking_User");
+
+                entity.HasOne(e => e.Staff)
+                    .WithMany(u => u.HandledTestBookings)
+                    .HasForeignKey(e => e.StaffId)
+                    .OnDelete(DeleteBehavior.NoAction)
+                    .HasConstraintName("FK_TestBooking_Staff");
+            });
+
+            modelBuilder.Entity<Appointment>(entity =>
+            {
+                entity.ToTable("Appointment");
+                entity.HasKey(e => e.AppointmentId);
+                entity.Property(e => e.AppointmentId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.Appointments)
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_Appointment_User");
+
+                entity.HasOne(e => e.Consultant)
+                       .WithMany(u => u.ConsultingAppointments)
+                       .HasForeignKey(e => e.ConsultantId)
+                       .OnDelete(DeleteBehavior.NoAction)
+                       .HasConstraintName("FK_Appointment_Consultant");
+
+                entity.HasOne(e => e.StaffSchedule)
+                      .WithMany(u => u.Appointments)
+                      .HasForeignKey(e => e.StaffScheduleId)
+                      .HasConstraintName("FK_Appointment_StaffSchedule");
+            });
+
+            modelBuilder.Entity<StaffSchedule>(entity =>
+            {
+                entity.ToTable("StaffSchedule");
+                entity.HasKey(e => e.StaffScheduleId);
+                entity.Property(e => e.StaffScheduleId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.StaffSchedules)
+                      .HasForeignKey(e => e.UserId)
+                      .HasConstraintName("FK_StaffSchedule_Consultant");
+            });
+
+            modelBuilder.Entity<Blog>(entity =>
+            {
+                entity.ToTable("Blog");
+                entity.HasKey(e => e.BlogId);
+                entity.Property(e => e.BlogId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+                entity.Property(e => e.Tittle).IsRequired();
+                entity.Property(e => e.Content).IsRequired();
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.Blogs)
+                      .HasForeignKey(e => e.UserId)
+                      .HasConstraintName("FK_Blog_User");
+            });
+
+            modelBuilder.Entity<Feedback>(entity =>
+            {
+                entity.ToTable("Feedback");
+                entity.HasKey(e => e.FeedbackId);
+                entity.Property(e => e.FeedbackId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.Feedbacks)
+                      .HasForeignKey(e => e.UserId)
+                      .HasConstraintName("FK_Feedback_User");
+
+                entity.HasMany(f => f.Services)
+                     .WithOne(s => s.Feedback)
+                     .HasForeignKey(s => s.FeedbackId)
+                     .HasConstraintName("FK_Service_Feedback");
+            });
+
+            modelBuilder.Entity<MenstrualCycle>(entity =>
+            {
+                entity.ToTable("MenstrualCycle");
+                entity.HasKey(e => e.MenstrualCycleId);
+                entity.Property(e => e.StartDate).IsRequired();
+                entity.Property(e => e.MenstrualCycleId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.MenstrualCycles)
+                      .HasForeignKey(e => e.UserId)
+                      .HasConstraintName("FK_MenstrualCycle_User");
+            });
+
+            modelBuilder.Entity<Question>(entity =>
+            {
+                entity.ToTable("Question");
+                entity.HasKey(e => e.QuestionId);
+                entity.Property(e => e.QuestionId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.QuestionsAsked)
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_Question_User");
+
+                entity.HasOne(e => e.Consultant)
+                      .WithMany(u => u.AnsweredQuestions)
+                      .HasForeignKey(e => e.ConsultantId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_Question_Consultant");
+            });
+        }
+    }
+}
+
