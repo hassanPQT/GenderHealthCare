@@ -54,10 +54,6 @@ namespace DataAccess.Entities
 
         [InverseProperty("User")]
         public ICollection<Appointment> Appointments { get; set; }
-        public ICollection<Question> Questions { get; set; }
-
-        public ICollection<Question> Answers { get; set; }
-
 
         [InverseProperty("Consultant")]
         public ICollection<Appointment> ConsultingAppointments { get; set; }
@@ -65,7 +61,10 @@ namespace DataAccess.Entities
         [InverseProperty("Staff")]
         public ICollection<TestBooking> HandledTestBookings { get; set; }
 
+        [InverseProperty("User")]
         public ICollection<Question> QuestionsAsked { get; set; }
+
+        [InverseProperty("Consultant")]
         public ICollection<Question> AnsweredQuestions { get; set; }
     }
 }

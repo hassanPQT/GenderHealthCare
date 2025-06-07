@@ -30,10 +30,10 @@ namespace DataAccess.Entities
 
         public Guid? ConsultantId { get; set; }
 
-        [ForeignKey("UserId")]
+        //[ForeignKey("UserId")]
         public User User { get; set; }
 
-        [ForeignKey("ConsultantId")]
+        //[ForeignKey("ConsultantId")]
         public User Consultant { get; set; }
         public bool IsActive { get; set; }
     }

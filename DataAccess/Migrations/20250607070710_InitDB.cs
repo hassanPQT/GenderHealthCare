@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class FixCascadeIssue : Migration
+    public partial class InitDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -131,9 +131,7 @@ namespace DataAccess.Migrations
                     PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConsultantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    UserId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UserId2 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,16 +144,6 @@ namespace DataAccess.Migrations
                     table.ForeignKey(
                         name: "FK_Question_User",
                         column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId");
-                    table.ForeignKey(
-                        name: "FK_Question_User_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "User",
-                        principalColumn: "UserId");
-                    table.ForeignKey(
-                        name: "FK_Question_User_UserId2",
-                        column: x => x.UserId2,
                         principalTable: "User",
                         principalColumn: "UserId");
                 });
@@ -375,16 +363,6 @@ namespace DataAccess.Migrations
                 name: "IX_Question_UserId",
                 table: "Question",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Question_UserId1",
-                table: "Question",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Question_UserId2",
-                table: "Question",
-                column: "UserId2");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Service_FeedbackId",

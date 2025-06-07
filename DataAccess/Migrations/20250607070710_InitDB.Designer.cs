@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250605024236_FixCascadeIssue")]
-    partial class FixCascadeIssue
+    [Migration("20250607070710_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -239,21 +239,11 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UserId1")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("UserId2")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("QuestionId");
 
                     b.HasIndex("ConsultantId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
-
-                    b.HasIndex("UserId2");
 
                     b.ToTable("Question", (string)null);
                 });
@@ -586,14 +576,6 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Question_User");
 
-                    b.HasOne("DataAccess.Entities.User", null)
-                        .WithMany("Answers")
-                        .HasForeignKey("UserId1");
-
-                    b.HasOne("DataAccess.Entities.User", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("UserId2");
-
                     b.Navigation("Consultant");
 
                     b.Navigation("User");
@@ -733,8 +715,6 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("AnsweredQuestions");
 
-                    b.Navigation("Answers");
-
                     b.Navigation("Appointments");
 
                     b.Navigation("Blogs");
@@ -748,8 +728,6 @@ namespace DataAccess.Migrations
                     b.Navigation("MedicalHistories");
 
                     b.Navigation("MenstrualCycles");
-
-                    b.Navigation("Questions");
 
                     b.Navigation("QuestionsAsked");
 

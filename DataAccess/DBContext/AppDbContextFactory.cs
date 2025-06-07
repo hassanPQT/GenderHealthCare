@@ -14,7 +14,7 @@ namespace DataAccess.DBContext
         public AppDbContext CreateDbContext(string[] args)
         {
             IConfigurationRoot configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory()) // 👉 KHÔNG thêm đường dẫn dư
+        .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json")
         .Build();
 
