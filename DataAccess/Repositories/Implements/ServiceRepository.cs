@@ -23,18 +23,23 @@ namespace DataAccess.Repositories.Implements
             await _context.Services.AddAsync(dto);
             await _context.SaveChangesAsync();
 
-            return dto;
+            var service = await _context.Services.FirstOrDefaultAsync(s => s.ServiceId == dto.ServiceId);
+
+            return service;
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var service = await GetByIdAsync(id);
+            var existedService = await GetByIdAsync(id);
 
-            if (service == null)
+            if (existedService == null)
                 return false;
 
-            _context.Services.Remove(service);
+            existedService.IsActive = false;
+            _context.Services.Update(existedService);
             await _context.SaveChangesAsync();
+
+            var service = await _context.Services.FirstOrDefaultAsync(s => s.ServiceId == id);
 
             return true;
         }
@@ -47,29 +52,27 @@ namespace DataAccess.Repositories.Implements
         public async Task<Service?> GetByIdAsync(Guid id)
         {
             return await _context.Services
-                .Include(s => s.Feedbacks)
-                .Include(s => s.TestResults)
-                .Include(s => s.TestBookings)
-                .Include(s => s.MedicalHistories)
                 .FirstOrDefaultAsync(s => s.ServiceId == id && s.IsActive);
 
         }
 
         public async Task<Service?> UpdateAsync(Guid id, Service dto)
         {
-            var service = await GetByIdAsync(id);
+            var existedService = await GetByIdAsync(id);
 
-            if (service == null)
+            if (existedService == null)
                 return null;
             else
             {
-                service.ServiceName = dto.ServiceName;
-                service.Description = dto.Description;
-                service.Price = dto.Price;
-                service.IsActive = dto.IsActive;
+                existedService.ServiceName = dto.ServiceName;
+                existedService.Description = dto.Description;
+                existedService.Price = dto.Price;
+                existedService.IsActive = dto.IsActive;
 
-                _context.Services.Update(service);
+                _context.Services.Update(existedService);
                 await _context.SaveChangesAsync();
+
+                var service = await _context.Services.FirstOrDefaultAsync(s => s.ServiceId == dto.ServiceId);
 
                 return service;
             }
