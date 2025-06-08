@@ -4,6 +4,7 @@ using BusinessAccess.Services.Interfaces;
 using DataAccess.DBContext;
 using DataAccess.Repositories.Implements;
 using DataAccess.Repositories.Interfaces;
+using GenderHealcareSystem.CustomActionFilters;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenderHealcareSystem
@@ -28,6 +29,9 @@ namespace GenderHealcareSystem
 
             // Inject Services
             builder.Services.AddScoped<IServiceService, ServiceService>();
+
+            //Add AutoMapper
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
             var app = builder.Build();
 
