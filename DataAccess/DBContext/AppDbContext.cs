@@ -72,6 +72,42 @@ namespace DataAccess.DBContext
                       .OnDelete(DeleteBehavior.NoAction)
                       .HasConstraintName("FK_TestBooking_Service");
 
+                // Seed data for Service table
+                entity.HasData(
+                    new Service
+                    {
+                        ServiceId = Guid.Parse("d220feba-eb1e-47d6-bc88-a044dcd45025"),
+                        ServiceName = "HIV Test",
+                        Description = "Blood test to detect HIV antibodies or antigens.",
+                        Price = 50.00,
+                        IsActive = true
+                    },
+                    new Service
+                    {
+                        ServiceId = Guid.Parse("92156da3-b20c-4b53-b0e4-748adaea4a75"),
+                        ServiceName = "Chlamydia Test",
+                        Description = "Urine or swab test to detect Chlamydia infection.",
+                        Price = 40.00,
+                        IsActive = true
+                    },
+                    new Service
+                    {
+                        ServiceId = Guid.Parse("c87031b9-f5ea-4494-a2f1-65743f194b8d"),
+                        ServiceName = "Gonorrhea Test",
+                        Description = "Swab or urine test to diagnose Gonorrhea.",
+                        Price = 40.00,
+                        IsActive = true
+                    },
+                    new Service
+                    {
+                        ServiceId = Guid.Parse("2bd04214-d426-49c1-b92c-061ca1057aa2"),
+                        ServiceName = "Syphilis Test",
+                        Description = "Blood test to detect Syphilis infection.",
+                        Price = 45.00,
+                        IsActive = true
+                    }
+                );
+
             });
 
             modelBuilder.Entity<MedicalHistory>(entity =>
