@@ -1,4 +1,5 @@
-﻿using BusinessAccess.Services.Interfaces;
+﻿using AutoMapper;
+using BusinessAccess.Services.Interfaces;
 using GenderHealcareSystem.CustomActionFilters;
 using GenderHealcareSystem.DTO;
 using Microsoft.AspNetCore.Http;
@@ -11,33 +12,23 @@ namespace GenderHealcareSystem.Controllers
     public class ServicesController : ControllerBase
     {
         private readonly IServiceService _service;
+        private readonly IMapper _mapper;
 
-        public ServicesController(IServiceService service)
+        public ServicesController(IServiceService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         //GET ALL SERVICES
         [HttpGet]
-        public async Task<IActionResult> GetAdd()
+        public async Task<IActionResult> GetAll()
         {
             //Get services from DB - domain model
             var servicesDomain = await _service.GetAllAsync();
 
             // Convert domain models to DTOs
-            var serviceDtos = new List<ServiceDto>();
-            foreach (var service in servicesDomain)
-            {
-                var serviceDto = new ServiceDto
-                {
-                    ServiceId = service.ServiceId,
-                    ServiceName = service.ServiceName,
-                    Description = service.Description,
-                    Price = service.Price,
-                    IsActive = service.IsActive,
-                };
-                serviceDtos.Add(serviceDto);
-            }
+            var serviceDtos = _mapper.Map<IEnumerable<ServiceDto>>(servicesDomain);
 
             return Ok(serviceDtos);
 
@@ -54,14 +45,7 @@ namespace GenderHealcareSystem.Controllers
                 return NotFound();
 
             //Covert domain model to dto
-            var serviceDto = new ServiceDto
-            {
-                ServiceId = serviceDomain.ServiceId,
-                ServiceName = serviceDomain.ServiceName,
-                Description = serviceDomain.Description,
-                Price = serviceDomain.Price,
-                IsActive = serviceDomain.IsActive,
-            };
+            var serviceDto = _mapper.Map<ServiceDto>(serviceDomain);
 
             return Ok(serviceDto);
         }
@@ -72,27 +56,14 @@ namespace GenderHealcareSystem.Controllers
         public async Task<IActionResult> Create([FromBody] AddServiceRequestDto dto)
         {
             //Convert Dto to domain model
-            var serviceDomain = new Service
-            {
-                ServiceName = dto.ServiceName,
-                Description = dto.Description,
-                Price = dto.Price,
-                IsActive = dto.IsActive,
-            };
+            var serviceDomain = _mapper.Map<Service>(dto);
 
             //Add domain model to DB
             serviceDomain = await _service.CreateAsync(serviceDomain);
 
             //Convert domain model to Dto
 
-            var serviceDto = new ServiceDto
-            {
-                ServiceId = serviceDomain.ServiceId,
-                ServiceName = serviceDomain.ServiceName,
-                Description = dto.Description,
-                Price = dto.Price,
-                IsActive = dto.IsActive,
-            };
+            var serviceDto = _mapper.Map<ServiceDto>(serviceDomain);
 
             return CreatedAtAction(nameof(GetById), new { id = serviceDto.ServiceId }, serviceDto);
         }
@@ -103,13 +74,7 @@ namespace GenderHealcareSystem.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateServiceRequestDto dto)
         {
             //Convert Dto to domain model
-            var serviceDomain = new Service
-            {
-                ServiceName = dto.ServiceName,
-                Description = dto.Description,
-                Price = dto.Price,
-                IsActive = dto.IsActive,
-            };
+            var serviceDomain = _mapper.Map<Service>(dto);
 
             //Update service in DB
             serviceDomain = await _service.UpdateAsync(id, serviceDomain);
@@ -118,14 +83,7 @@ namespace GenderHealcareSystem.Controllers
                 return NotFound();
 
             //Convert Domain model to Dto
-            var serviceDto = new ServiceDto
-            {
-                ServiceId = serviceDomain.ServiceId,
-                ServiceName = serviceDomain.ServiceName,
-                Description = dto.Description,
-                Price = dto.Price,
-                IsActive = dto.IsActive,
-            };
+            var serviceDto = _mapper.Map<ServiceDto>(serviceDomain);
 
             return Ok(serviceDto);
         }
