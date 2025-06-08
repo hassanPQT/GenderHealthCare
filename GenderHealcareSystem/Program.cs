@@ -1,5 +1,9 @@
 
+using BusinessAccess.Services.Implements;
+using BusinessAccess.Services.Interfaces;
 using DataAccess.DBContext;
+using DataAccess.Repositories.Implements;
+using DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenderHealcareSystem
@@ -18,6 +22,13 @@ namespace GenderHealcareSystem
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<AppDbContext>(options =>
                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Inject Repositories
+            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+
+            // Inject Services
+            builder.Services.AddScoped<IServiceService, ServiceService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
