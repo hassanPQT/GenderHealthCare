@@ -72,7 +72,7 @@ namespace DataAccess.Repositories.Implements
                 _context.Services.Update(existedService);
                 await _context.SaveChangesAsync();
 
-                var service = await _context.Services.FirstOrDefaultAsync(s => s.ServiceId == dto.ServiceId);
+                var service = await _context.Services.FirstOrDefaultAsync(s => s.ServiceId == id);
 
                 return service;
             }
