@@ -60,23 +60,24 @@ namespace DataAccess.DBContext
                 entity.Property(e => e.ServiceName).IsRequired();
                 entity.Property(e => e.ServiceId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
 
-                entity.HasOne(s => s.TestResult)
-                  .WithMany(tr => tr.Services)
-                  .HasForeignKey(s => s.TestResultId)
-                  .OnDelete(DeleteBehavior.NoAction)
-                  .HasConstraintName("FK_Service_TestResult");
+                entity.HasMany(s => s.TestResults)
+                      .WithOne(tr => tr.Service)
+                      .HasForeignKey(tr => tr.ServiceId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_TestResult_Service");
 
-                entity.HasOne(s => s.TestBooking)
-                  .WithMany(tb => tb.Services)
-                  .HasForeignKey(s => s.TestBookingId)
-                  .HasConstraintName("FK_Service_TestBooking");
+                entity.HasMany(s => s.TestBookings)
+                      .WithOne(tb => tb.Service)
+                      .HasForeignKey(tb => tb.ServiceId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_TestBooking_Service");
 
             });
 
             modelBuilder.Entity<MedicalHistory>(entity =>
             {
                 entity.ToTable("MedicalHistory");
-                entity.HasKey(e => new { e.MedicallHistoryId });
+                entity.HasKey(e => new { e.MedicalHistoryId });
 
                 entity.HasOne(e => e.User)
                       .WithMany(u => u.MedicalHistories)
@@ -89,7 +90,7 @@ namespace DataAccess.DBContext
                       .OnDelete(DeleteBehavior.NoAction)
                       .HasConstraintName("FK_MedicalHistory_Service");
 
-                
+
             });
 
             modelBuilder.Entity<TestResult>(entity =>
@@ -189,10 +190,11 @@ namespace DataAccess.DBContext
                       .HasForeignKey(e => e.UserId)
                       .HasConstraintName("FK_Feedback_User");
 
-                entity.HasMany(f => f.Services)
-                     .WithOne(s => s.Feedback)
-                     .HasForeignKey(s => s.FeedbackId)
-                     .HasConstraintName("FK_Service_Feedback");
+                entity.HasOne(f => f.Service)
+                      .WithMany(s => s.Feedbacks)
+                      .HasForeignKey(f => f.ServiceId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_Feedback_Service");
             });
 
             modelBuilder.Entity<MenstrualCycle>(entity =>
