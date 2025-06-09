@@ -17,17 +17,14 @@ namespace DataAccess.Entities
 
         public Guid UserId { get; set; }
 
-        public Guid? StaffId { get; set; }
+        public Guid StaffId { get; set; }
         public DateTime BookingDate { get; set; }
-
-        [MaxLength(10)]
-        public string BookingStaff { get; set; }
 
         [MaxLength(10)]
         public string Status { get; set; }
 
         [MaxLength(100)]
-        public string Note { get; set; }
+        public string? Note { get; set; }
 
         [ForeignKey("UserId")]
         [InverseProperty("TestBookings")]
