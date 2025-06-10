@@ -1,40 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace DataAccess.Entities
+public class Service
 {
-    public class Service
-    {
-        [Key]
-        public Guid ServiceId { get; set; }
-
-        [MaxLength(10)]
-        public string ServiceName { get; set; }
-
-        [MaxLength(500)]
-        public string Description { get; set; }
-
-        public double Price { get; set; }
-
-        public Guid TestResultId { get; set; }
-
-        public Guid TestBookingId { get; set; }
-
-        public Guid FeedbackId { get; set; }
-        public Feedback Feedback { get; set; }
-
-        [ForeignKey("TestResultId")]
-        public TestResult TestResult { get; set; }
-
-        [ForeignKey("TestBookingId")]
-        public TestBooking TestBooking { get; set; }
-        public ICollection<MedicalHistory> MedicalHistories { get; set; }
-        
-        
-    }
+    [Key]
+    public Guid ServiceId { get; set; }
+    [Required, MaxLength(50)] 
+    public string ServiceName { get; set; }
+    [MaxLength(500)]
+    public string Description { get; set; }
+    [Required]
+    public double Price { get; set; }
+    public bool IsActive { get; set; }
+    public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+    public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
+    public ICollection<TestBooking> TestBookings { get; set; } = new List<TestBooking>();
+    public ICollection<MedicalHistory> MedicalHistories { get; set; } = new List<MedicalHistory>();
 }

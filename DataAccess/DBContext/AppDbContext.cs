@@ -60,23 +60,60 @@ namespace DataAccess.DBContext
                 entity.Property(e => e.ServiceName).IsRequired();
                 entity.Property(e => e.ServiceId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
 
-                entity.HasOne(s => s.TestResult)
-                  .WithMany(tr => tr.Services)
-                  .HasForeignKey(s => s.TestResultId)
-                  .OnDelete(DeleteBehavior.NoAction)
-                  .HasConstraintName("FK_Service_TestResult");
+                entity.HasMany(s => s.TestResults)
+                      .WithOne(tr => tr.Service)
+                      .HasForeignKey(tr => tr.ServiceId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_TestResult_Service");
 
-                entity.HasOne(s => s.TestBooking)
-                  .WithMany(tb => tb.Services)
-                  .HasForeignKey(s => s.TestBookingId)
-                  .HasConstraintName("FK_Service_TestBooking");
+                entity.HasMany(s => s.TestBookings)
+                      .WithOne(tb => tb.Service)
+                      .HasForeignKey(tb => tb.ServiceId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_TestBooking_Service");
+
+                // Seed data for Service table
+                entity.HasData(
+                    new Service
+                    {
+                        ServiceId = Guid.Parse("d220feba-eb1e-47d6-bc88-a044dcd45025"),
+                        ServiceName = "HIV Test",
+                        Description = "Blood test to detect HIV antibodies or antigens.",
+                        Price = 50.00,
+                        IsActive = true
+                    },
+                    new Service
+                    {
+                        ServiceId = Guid.Parse("92156da3-b20c-4b53-b0e4-748adaea4a75"),
+                        ServiceName = "Chlamydia Test",
+                        Description = "Urine or swab test to detect Chlamydia infection.",
+                        Price = 40.00,
+                        IsActive = true
+                    },
+                    new Service
+                    {
+                        ServiceId = Guid.Parse("c87031b9-f5ea-4494-a2f1-65743f194b8d"),
+                        ServiceName = "Gonorrhea Test",
+                        Description = "Swab or urine test to diagnose Gonorrhea.",
+                        Price = 40.00,
+                        IsActive = true
+                    },
+                    new Service
+                    {
+                        ServiceId = Guid.Parse("2bd04214-d426-49c1-b92c-061ca1057aa2"),
+                        ServiceName = "Syphilis Test",
+                        Description = "Blood test to detect Syphilis infection.",
+                        Price = 45.00,
+                        IsActive = true
+                    }
+                );
 
             });
 
             modelBuilder.Entity<MedicalHistory>(entity =>
             {
                 entity.ToTable("MedicalHistory");
-                entity.HasKey(e => new { e.MedicallHistoryId });
+                entity.HasKey(e => new { e.MedicalHistoryId });
 
                 entity.HasOne(e => e.User)
                       .WithMany(u => u.MedicalHistories)
@@ -89,7 +126,7 @@ namespace DataAccess.DBContext
                       .OnDelete(DeleteBehavior.NoAction)
                       .HasConstraintName("FK_MedicalHistory_Service");
 
-                
+
             });
 
             modelBuilder.Entity<TestResult>(entity =>
@@ -189,10 +226,11 @@ namespace DataAccess.DBContext
                       .HasForeignKey(e => e.UserId)
                       .HasConstraintName("FK_Feedback_User");
 
-                entity.HasMany(f => f.Services)
-                     .WithOne(s => s.Feedback)
-                     .HasForeignKey(s => s.FeedbackId)
-                     .HasConstraintName("FK_Service_Feedback");
+                entity.HasOne(f => f.Service)
+                      .WithMany(s => s.Feedbacks)
+                      .HasForeignKey(f => f.ServiceId)
+                      .OnDelete(DeleteBehavior.NoAction)
+                      .HasConstraintName("FK_Feedback_Service");
             });
 
             modelBuilder.Entity<MenstrualCycle>(entity =>

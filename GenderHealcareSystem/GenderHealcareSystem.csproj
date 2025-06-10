@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessAccess\BusinessAccess.csproj" />
+    <ProjectReference Include="..\Respository\Respository.csproj" />
   </ItemGroup>
 
 </Project>

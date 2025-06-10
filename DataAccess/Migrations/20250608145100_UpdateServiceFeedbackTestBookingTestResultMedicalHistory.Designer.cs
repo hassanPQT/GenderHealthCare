@@ -4,6 +4,7 @@ using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250608145100_UpdateServiceFeedbackTestBookingTestResultMedicalHistory")]
+    partial class UpdateServiceFeedbackTestBookingTestResultMedicalHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -375,40 +378,6 @@ namespace DataAccess.Migrations
                     b.HasKey("ServiceId");
 
                     b.ToTable("Service", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            ServiceId = new Guid("d220feba-eb1e-47d6-bc88-a044dcd45025"),
-                            Description = "Blood test to detect HIV antibodies or antigens.",
-                            IsActive = true,
-                            Price = 50.0,
-                            ServiceName = "HIV Test"
-                        },
-                        new
-                        {
-                            ServiceId = new Guid("92156da3-b20c-4b53-b0e4-748adaea4a75"),
-                            Description = "Urine or swab test to detect Chlamydia infection.",
-                            IsActive = true,
-                            Price = 40.0,
-                            ServiceName = "Chlamydia Test"
-                        },
-                        new
-                        {
-                            ServiceId = new Guid("c87031b9-f5ea-4494-a2f1-65743f194b8d"),
-                            Description = "Swab or urine test to diagnose Gonorrhea.",
-                            IsActive = true,
-                            Price = 40.0,
-                            ServiceName = "Gonorrhea Test"
-                        },
-                        new
-                        {
-                            ServiceId = new Guid("2bd04214-d426-49c1-b92c-061ca1057aa2"),
-                            Description = "Blood test to detect Syphilis infection.",
-                            IsActive = true,
-                            Price = 45.0,
-                            ServiceName = "Syphilis Test"
-                        });
                 });
 
             modelBuilder.Entity("TestBooking", b =>
@@ -422,13 +391,14 @@ namespace DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("StaffId")
+                    b.Property<Guid?>("StaffId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -646,7 +616,6 @@ namespace DataAccess.Migrations
                         .WithMany("HandledTestBookings")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
                         .HasConstraintName("FK_TestBooking_Staff");
 
                     b.HasOne("DataAccess.Entities.User", "User")

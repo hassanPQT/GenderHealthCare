@@ -1,8 +1,11 @@
 ﻿
-using BusinessAccess.IServices;
-using BusinessAccess.Services;
+using BusinessAccess.Services.Implements;
+using BusinessAccess.Services.Interfaces;
 using DataAccess.DBContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DataAccess.Repositories.Implements;
+using DataAccess.Repositories.Interfaces;
+using GenderHealcareSystem.CustomActionFilters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Respository.IRepositories;
@@ -81,6 +84,16 @@ namespace GenderHealcareSystem
              });
             builder.Services.AddDbContext<AppDbContext>(options =>
                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Inject Repositories
+            builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+
+            // Inject Services
+            builder.Services.AddScoped<IServiceService, ServiceService>();
+
+            //Add AutoMapper
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
