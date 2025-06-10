@@ -1,4 +1,4 @@
-﻿using BusinessAccess.IServices;
+﻿using BusinessAccess.Services.Interfaces;
 using DataAccess.Entities;
 using GenderHealcareSystem.DTO.Request;
 using GenderHealcareSystem.DTO.Response;
