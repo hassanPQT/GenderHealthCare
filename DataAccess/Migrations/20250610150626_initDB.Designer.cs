@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250607170005_Updaterole")]
-    partial class Updaterole
+    [Migration("20250610150626_initDB")]
+    partial class initDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,75 +91,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Blog", (string)null);
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.Feedback", b =>
-                {
-                    b.Property<Guid>("FeedbackId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("PublistDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ServiceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Tittle")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
-                    b.HasKey("FeedbackId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Feedback", (string)null);
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.MedicalHistory", b =>
-                {
-                    b.Property<Guid>("MedicallHistoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ServiceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("TestResultId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("MedicallHistoryId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MedicalHistory", (string)null);
                 });
 
             modelBuilder.Entity("DataAccess.Entities.MenstrualCycle", b =>
@@ -266,46 +197,6 @@ namespace DataAccess.Migrations
                     b.ToTable("Role", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.Service", b =>
-                {
-                    b.Property<Guid>("ServiceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("FeedbackId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<string>("ServiceName")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<Guid>("TestBookingId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("TestResultId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ServiceId");
-
-                    b.HasIndex("FeedbackId");
-
-                    b.HasIndex("TestBookingId");
-
-                    b.HasIndex("TestResultId");
-
-                    b.ToTable("Service", (string)null);
-                });
-
             modelBuilder.Entity("DataAccess.Entities.StaffSchedule", b =>
                 {
                     b.Property<Guid>("StaffScheduleId")
@@ -335,7 +226,194 @@ namespace DataAccess.Migrations
                     b.ToTable("StaffSchedule", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.TestBooking", b =>
+            modelBuilder.Entity("DataAccess.Entities.User", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("Dob")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Gender")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<Guid?>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("Feedback", b =>
+                {
+                    b.Property<Guid>("FeedbackId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("PublishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("FeedbackId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feedback", (string)null);
+                });
+
+            modelBuilder.Entity("MedicalHistory", b =>
+                {
+                    b.Property<Guid>("MedicalHistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("MedicalHistoryId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MedicalHistory", (string)null);
+                });
+
+            modelBuilder.Entity("Service", b =>
+                {
+                    b.Property<Guid>("ServiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<string>("ServiceName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ServiceId");
+
+                    b.ToTable("Service", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ServiceId = new Guid("d220feba-eb1e-47d6-bc88-a044dcd45025"),
+                            Description = "Blood test to detect HIV antibodies or antigens.",
+                            IsActive = true,
+                            Price = 50.0,
+                            ServiceName = "HIV Test"
+                        },
+                        new
+                        {
+                            ServiceId = new Guid("92156da3-b20c-4b53-b0e4-748adaea4a75"),
+                            Description = "Urine or swab test to detect Chlamydia infection.",
+                            IsActive = true,
+                            Price = 40.0,
+                            ServiceName = "Chlamydia Test"
+                        },
+                        new
+                        {
+                            ServiceId = new Guid("c87031b9-f5ea-4494-a2f1-65743f194b8d"),
+                            Description = "Swab or urine test to diagnose Gonorrhea.",
+                            IsActive = true,
+                            Price = 40.0,
+                            ServiceName = "Gonorrhea Test"
+                        },
+                        new
+                        {
+                            ServiceId = new Guid("2bd04214-d426-49c1-b92c-061ca1057aa2"),
+                            Description = "Blood test to detect Syphilis infection.",
+                            IsActive = true,
+                            Price = 45.0,
+                            ServiceName = "Syphilis Test"
+                        });
+                });
+
+            modelBuilder.Entity("TestBooking", b =>
                 {
                     b.Property<Guid>("TestBookingId")
                         .ValueGeneratedOnAdd()
@@ -346,13 +424,14 @@ namespace DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("StaffId")
+                    b.Property<Guid?>("StaffId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -365,6 +444,8 @@ namespace DataAccess.Migrations
 
                     b.HasKey("TestBookingId");
 
+                    b.HasIndex("ServiceId");
+
                     b.HasIndex("StaffId");
 
                     b.HasIndex("UserId");
@@ -372,7 +453,7 @@ namespace DataAccess.Migrations
                     b.ToTable("TestBooking", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.TestResult", b =>
+            modelBuilder.Entity("TestResult", b =>
                 {
                     b.Property<Guid>("TestResultId")
                         .ValueGeneratedOnAdd()
@@ -390,8 +471,11 @@ namespace DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("SmapleReceivedDate")
+                    b.Property<DateTime>("SampleReceivedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -406,64 +490,11 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("MedicalHistoryId");
 
+                    b.HasIndex("ServiceId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("TestResult", (string)null);
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.User", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("Dob")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool?>("Gender")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<Guid?>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("Username")
-                        .IsUnique();
-
-                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Appointment", b =>
@@ -507,39 +538,6 @@ namespace DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.Feedback", b =>
-                {
-                    b.HasOne("DataAccess.Entities.User", "User")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Feedback_User");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.MedicalHistory", b =>
-                {
-                    b.HasOne("DataAccess.Entities.Service", "Service")
-                        .WithMany("MedicalHistories")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_MedicalHistory_Service");
-
-                    b.HasOne("DataAccess.Entities.User", "User")
-                        .WithMany("MedicalHistories")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_MedicalHistory_User");
-
-                    b.Navigation("Service");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("DataAccess.Entities.MenstrualCycle", b =>
                 {
                     b.HasOne("DataAccess.Entities.User", "User")
@@ -572,36 +570,6 @@ namespace DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.Service", b =>
-                {
-                    b.HasOne("DataAccess.Entities.Feedback", "Feedback")
-                        .WithMany("Services")
-                        .HasForeignKey("FeedbackId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Service_Feedback");
-
-                    b.HasOne("DataAccess.Entities.TestBooking", "TestBooking")
-                        .WithMany("Services")
-                        .HasForeignKey("TestBookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Service_TestBooking");
-
-                    b.HasOne("DataAccess.Entities.TestResult", "TestResult")
-                        .WithMany("Services")
-                        .HasForeignKey("TestResultId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_Service_TestResult");
-
-                    b.Navigation("Feedback");
-
-                    b.Navigation("TestBooking");
-
-                    b.Navigation("TestResult");
-                });
-
             modelBuilder.Entity("DataAccess.Entities.StaffSchedule", b =>
                 {
                     b.HasOne("DataAccess.Entities.User", "User")
@@ -610,48 +578,6 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_StaffSchedule_Consultant");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.TestBooking", b =>
-                {
-                    b.HasOne("DataAccess.Entities.User", "Staff")
-                        .WithMany("HandledTestBookings")
-                        .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_TestBooking_Staff");
-
-                    b.HasOne("DataAccess.Entities.User", "User")
-                        .WithMany("TestBookings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_TestBooking_User");
-
-                    b.Navigation("Staff");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.TestResult", b =>
-                {
-                    b.HasOne("DataAccess.Entities.MedicalHistory", "MedicalHistory")
-                        .WithMany("TestResults")
-                        .HasForeignKey("MedicalHistoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_TestResult_MedicalHistory");
-
-                    b.HasOne("DataAccess.Entities.User", "User")
-                        .WithMany("TestResults")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_TestResult_User");
-
-                    b.Navigation("MedicalHistory");
 
                     b.Navigation("User");
                 });
@@ -666,14 +592,105 @@ namespace DataAccess.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.Feedback", b =>
+            modelBuilder.Entity("Feedback", b =>
                 {
-                    b.Navigation("Services");
+                    b.HasOne("Service", "Service")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_Feedback_Service");
+
+                    b.HasOne("DataAccess.Entities.User", "User")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Feedback_User");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.MedicalHistory", b =>
+            modelBuilder.Entity("MedicalHistory", b =>
                 {
-                    b.Navigation("TestResults");
+                    b.HasOne("Service", "Service")
+                        .WithMany("MedicalHistories")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_MedicalHistory_Service");
+
+                    b.HasOne("DataAccess.Entities.User", "User")
+                        .WithMany("MedicalHistories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_MedicalHistory_User");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TestBooking", b =>
+                {
+                    b.HasOne("Service", "Service")
+                        .WithMany("TestBookings")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_TestBooking_Service");
+
+                    b.HasOne("DataAccess.Entities.User", "Staff")
+                        .WithMany("HandledTestBookings")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasConstraintName("FK_TestBooking_Staff");
+
+                    b.HasOne("DataAccess.Entities.User", "User")
+                        .WithMany("TestBookings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_TestBooking_User");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("Staff");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TestResult", b =>
+                {
+                    b.HasOne("MedicalHistory", "MedicalHistory")
+                        .WithMany("TestResults")
+                        .HasForeignKey("MedicalHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_TestResult_MedicalHistory");
+
+                    b.HasOne("Service", "Service")
+                        .WithMany("TestResults")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_TestResult_Service");
+
+                    b.HasOne("DataAccess.Entities.User", "User")
+                        .WithMany("TestResults")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_TestResult_User");
+
+                    b.Navigation("MedicalHistory");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Role", b =>
@@ -681,24 +698,9 @@ namespace DataAccess.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("DataAccess.Entities.Service", b =>
-                {
-                    b.Navigation("MedicalHistories");
-                });
-
             modelBuilder.Entity("DataAccess.Entities.StaffSchedule", b =>
                 {
                     b.Navigation("Appointments");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.TestBooking", b =>
-                {
-                    b.Navigation("Services");
-                });
-
-            modelBuilder.Entity("DataAccess.Entities.TestResult", b =>
-                {
-                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.User", b =>
@@ -722,6 +724,22 @@ namespace DataAccess.Migrations
                     b.Navigation("QuestionsAsked");
 
                     b.Navigation("StaffSchedules");
+
+                    b.Navigation("TestBookings");
+
+                    b.Navigation("TestResults");
+                });
+
+            modelBuilder.Entity("MedicalHistory", b =>
+                {
+                    b.Navigation("TestResults");
+                });
+
+            modelBuilder.Entity("Service", b =>
+                {
+                    b.Navigation("Feedbacks");
+
+                    b.Navigation("MedicalHistories");
 
                     b.Navigation("TestBookings");
 

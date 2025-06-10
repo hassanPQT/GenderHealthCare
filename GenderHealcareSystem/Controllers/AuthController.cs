@@ -1,11 +1,11 @@
-﻿using BusinessAccess.IServices;
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using BCrypt.Net;
 using GenderHealcareSystem.DTO.Request;
 using BusinessAccess.Helpers;
 using GenderHealcareSystem.DTO.Response;
+using BusinessAccess.Services.Interfaces;
 namespace GenderHealcareSystem.Controllers
 {
     [Route("api/[controller]")]

@@ -231,11 +231,10 @@ namespace DataAccess.Migrations
                         .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("Dob")
+                    b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -243,7 +242,10 @@ namespace DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("Gender")
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Gender")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
@@ -251,16 +253,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasMaxLength(10)
+                    b.Property<Guid?>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
@@ -422,13 +421,14 @@ namespace DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("StaffId")
+                    b.Property<Guid?>("StaffId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -584,8 +584,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("FK_User_Role");
 
                     b.Navigation("Role");
@@ -646,7 +644,6 @@ namespace DataAccess.Migrations
                         .WithMany("HandledTestBookings")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
                         .HasConstraintName("FK_TestBooking_Staff");
 
                     b.HasOne("DataAccess.Entities.User", "User")
