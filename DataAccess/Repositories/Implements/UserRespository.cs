@@ -43,15 +43,16 @@ namespace Respository.Repositories
         public async Task<User?> UpdateAsync(Guid id, User dto)
         {
             var user = await _context.Users.FindAsync(id);
+            
             if (user == null) return null;
 
             user.FullName = dto.FullName;
             user.Email = dto.Email;
             user.PhoneNumber = dto.PhoneNumber;
             user.Address = dto.Address;
-            user.Dob = dto.Dob != default ? dto.Dob : user.Dob;
+            if (dto.Dob != null)
+                user.Dob = dto.Dob.Value;
             user.Gender = dto.Gender;
-
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
 

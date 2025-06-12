@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using BusinessAccess.Services;
+using GenderHealcareSystem.Converters;
 namespace GenderHealcareSystem
 {
     public class Program
@@ -94,6 +95,12 @@ namespace GenderHealcareSystem
 
             //Add AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            // convert date time
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+            });
 
             var app = builder.Build();
 

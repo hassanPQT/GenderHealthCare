@@ -34,7 +34,7 @@ namespace DataAccess.Entities
         [MaxLength(50)]
         public string? Address { get; set; }
 
-        public DateTime? Dob { get; set; }
+        public DateOnly? Dob { get; set; }
 
         public bool IsDeleted { get; set; }
 

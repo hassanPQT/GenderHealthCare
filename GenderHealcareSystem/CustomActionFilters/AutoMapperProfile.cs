@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using DataAccess.Entities;
 using GenderHealcareSystem.DTO;
+using GenderHealcareSystem.DTO.Request;
+using System.Globalization;
 
 namespace GenderHealcareSystem.CustomActionFilters
 {
@@ -10,6 +13,9 @@ namespace GenderHealcareSystem.CustomActionFilters
             CreateMap<Service, ServiceDto>().ReverseMap();
             CreateMap<Service, AddServiceRequestDto>().ReverseMap();
             CreateMap<Service, UpdateServiceRequestDto>().ReverseMap();
-        }
+            CreateMap<UpdateUserRequest, User>()
+                    .ForMember(dest => dest.Dob,
+                        opt => opt.MapFrom(src => src.DateOfBirth));
+                        }
     }
 }
