@@ -67,7 +67,7 @@ packages/*
 # # Configuration files   
 
 # appsettings*.json   
-CinemaMVC/wwwroot/firebase-key.json
+# CinemaMVC/wwwroot/firebase-key.json
 
 
 
