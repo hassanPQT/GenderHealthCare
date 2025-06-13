@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDB : Migration
+    public partial class initDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,18 +26,34 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Service",
+                columns: table => new
+                {
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
+                    ServiceName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Service", x => x.ServiceId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Username = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Gender = table.Column<bool>(type: "bit", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<bool>(type: "bit", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Dob = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Dob = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -45,8 +63,7 @@ namespace DataAccess.Migrations
                         name: "FK_User_Role",
                         column: x => x.RoleId,
                         principalTable: "Role",
-                        principalColumn: "RoleId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "RoleId");
                 });
 
             migrationBuilder.CreateTable(
@@ -75,19 +92,50 @@ namespace DataAccess.Migrations
                 columns: table => new
                 {
                     FeedbackId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Tittle = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Content = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
-                    PublistDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    isActive = table.Column<bool>(type: "bit", nullable: false)
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Feedback", x => x.FeedbackId);
                     table.ForeignKey(
+                        name: "FK_Feedback_Service",
+                        column: x => x.ServiceId,
+                        principalTable: "Service",
+                        principalColumn: "ServiceId");
+                    table.ForeignKey(
                         name: "FK_Feedback_User",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MedicalHistory",
+                columns: table => new
+                {
+                    MedicalHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MedicalHistory", x => x.MedicalHistoryId);
+                    table.ForeignKey(
+                        name: "FK_MedicalHistory_Service",
+                        column: x => x.ServiceId,
+                        principalTable: "Service",
+                        principalColumn: "ServiceId");
+                    table.ForeignKey(
+                        name: "FK_MedicalHistory_User",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
@@ -178,7 +226,6 @@ namespace DataAccess.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BookingStaff = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     Note = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
@@ -186,12 +233,52 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_TestBooking", x => x.TestBookingId);
                     table.ForeignKey(
+                        name: "FK_TestBooking_Service",
+                        column: x => x.ServiceId,
+                        principalTable: "Service",
+                        principalColumn: "ServiceId");
+                    table.ForeignKey(
                         name: "FK_TestBooking_Staff",
                         column: x => x.StaffId,
                         principalTable: "User",
                         principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_TestBooking_User",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestResult",
+                columns: table => new
+                {
+                    TestResultId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
+                    ResultDetail = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    TestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SampleReceivedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ResultDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MedicalHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestResult", x => x.TestResultId);
+                    table.ForeignKey(
+                        name: "FK_TestResult_MedicalHistory",
+                        column: x => x.MedicalHistoryId,
+                        principalTable: "MedicalHistory",
+                        principalColumn: "MedicalHistoryId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TestResult_Service",
+                        column: x => x.ServiceId,
+                        principalTable: "Service",
+                        principalColumn: "ServiceId");
+                    table.ForeignKey(
+                        name: "FK_TestResult_User",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId");
@@ -229,89 +316,15 @@ namespace DataAccess.Migrations
                         principalColumn: "UserId");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "MedicalHistory",
-                columns: table => new
+            migrationBuilder.InsertData(
+                table: "Service",
+                columns: new[] { "ServiceId", "Description", "IsActive", "Price", "ServiceName" },
+                values: new object[,]
                 {
-                    MedicallHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TestResultId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MedicalHistory", x => x.MedicallHistoryId);
-                    table.ForeignKey(
-                        name: "FK_MedicalHistory_User",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TestResult",
-                columns: table => new
-                {
-                    TestResultId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
-                    ResultDetail = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    TestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SmapleReceivedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ResultDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MedicalHistoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestResult", x => x.TestResultId);
-                    table.ForeignKey(
-                        name: "FK_TestResult_MedicalHistory",
-                        column: x => x.MedicalHistoryId,
-                        principalTable: "MedicalHistory",
-                        principalColumn: "MedicallHistoryId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TestResult_User",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Service",
-                columns: table => new
-                {
-                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
-                    ServiceName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
-                    TestResultId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TestBookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FeedbackId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Service", x => x.ServiceId);
-                    table.ForeignKey(
-                        name: "FK_Service_Feedback",
-                        column: x => x.FeedbackId,
-                        principalTable: "Feedback",
-                        principalColumn: "FeedbackId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Service_TestBooking",
-                        column: x => x.TestBookingId,
-                        principalTable: "TestBooking",
-                        principalColumn: "TestBookingId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Service_TestResult",
-                        column: x => x.TestResultId,
-                        principalTable: "TestResult",
-                        principalColumn: "TestResultId");
+                    { new Guid("2bd04214-d426-49c1-b92c-061ca1057aa2"), "Blood test to detect Syphilis infection.", true, 45.0, "Syphilis Test" },
+                    { new Guid("92156da3-b20c-4b53-b0e4-748adaea4a75"), "Urine or swab test to detect Chlamydia infection.", true, 40.0, "Chlamydia Test" },
+                    { new Guid("c87031b9-f5ea-4494-a2f1-65743f194b8d"), "Swab or urine test to diagnose Gonorrhea.", true, 40.0, "Gonorrhea Test" },
+                    { new Guid("d220feba-eb1e-47d6-bc88-a044dcd45025"), "Blood test to detect HIV antibodies or antigens.", true, 50.0, "HIV Test" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -333,6 +346,11 @@ namespace DataAccess.Migrations
                 name: "IX_Blog_UserId",
                 table: "Blog",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feedback_ServiceId",
+                table: "Feedback",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Feedback_UserId",
@@ -365,24 +383,14 @@ namespace DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Service_FeedbackId",
-                table: "Service",
-                column: "FeedbackId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Service_TestBookingId",
-                table: "Service",
-                column: "TestBookingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Service_TestResultId",
-                table: "Service",
-                column: "TestResultId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_StaffSchedule_UserId",
                 table: "StaffSchedule",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestBooking_ServiceId",
+                table: "TestBooking",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestBooking_StaffId",
@@ -398,6 +406,11 @@ namespace DataAccess.Migrations
                 name: "IX_TestResult_MedicalHistoryId",
                 table: "TestResult",
                 column: "MedicalHistoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TestResult_ServiceId",
+                table: "TestResult",
+                column: "ServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TestResult_UserId",
@@ -420,47 +433,19 @@ namespace DataAccess.Migrations
                 table: "User",
                 column: "Username",
                 unique: true);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_MedicalHistory_Service",
-                table: "MedicalHistory",
-                column: "ServiceId",
-                principalTable: "Service",
-                principalColumn: "ServiceId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Feedback_User",
-                table: "Feedback");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_MedicalHistory_User",
-                table: "MedicalHistory");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_TestBooking_Staff",
-                table: "TestBooking");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_TestBooking_User",
-                table: "TestBooking");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_TestResult_User",
-                table: "TestResult");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_MedicalHistory_Service",
-                table: "MedicalHistory");
-
             migrationBuilder.DropTable(
                 name: "Appointment");
 
             migrationBuilder.DropTable(
                 name: "Blog");
+
+            migrationBuilder.DropTable(
+                name: "Feedback");
 
             migrationBuilder.DropTable(
                 name: "MenstrualCycle");
@@ -469,28 +454,25 @@ namespace DataAccess.Migrations
                 name: "Question");
 
             migrationBuilder.DropTable(
-                name: "StaffSchedule");
-
-            migrationBuilder.DropTable(
-                name: "User");
-
-            migrationBuilder.DropTable(
-                name: "Role");
-
-            migrationBuilder.DropTable(
-                name: "Service");
-
-            migrationBuilder.DropTable(
-                name: "Feedback");
-
-            migrationBuilder.DropTable(
                 name: "TestBooking");
 
             migrationBuilder.DropTable(
                 name: "TestResult");
 
             migrationBuilder.DropTable(
+                name: "StaffSchedule");
+
+            migrationBuilder.DropTable(
                 name: "MedicalHistory");
+
+            migrationBuilder.DropTable(
+                name: "Service");
+
+            migrationBuilder.DropTable(
+                name: "User");
+
+            migrationBuilder.DropTable(
+                name: "Role");
         }
     }
 }

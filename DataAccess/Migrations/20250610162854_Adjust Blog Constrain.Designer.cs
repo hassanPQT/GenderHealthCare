@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250608145100_UpdateServiceFeedbackTestBookingTestResultMedicalHistory")]
-    partial class UpdateServiceFeedbackTestBookingTestResultMedicalHistory
+    [Migration("20250610162854_Adjust Blog Constrain")]
+    partial class AdjustBlogConstrain
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,8 +71,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PublistDate")
                         .HasColumnType("datetime2");
@@ -234,11 +233,10 @@ namespace DataAccess.Migrations
                         .HasDefaultValueSql("NEWID()");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("Dob")
+                    b.Property<DateTime?>("Dob")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -246,7 +244,10 @@ namespace DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("Gender")
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Gender")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
@@ -254,16 +255,13 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasMaxLength(10)
+                    b.Property<Guid?>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
@@ -378,6 +376,40 @@ namespace DataAccess.Migrations
                     b.HasKey("ServiceId");
 
                     b.ToTable("Service", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            ServiceId = new Guid("d220feba-eb1e-47d6-bc88-a044dcd45025"),
+                            Description = "Blood test to detect HIV antibodies or antigens.",
+                            IsActive = true,
+                            Price = 50.0,
+                            ServiceName = "HIV Test"
+                        },
+                        new
+                        {
+                            ServiceId = new Guid("92156da3-b20c-4b53-b0e4-748adaea4a75"),
+                            Description = "Urine or swab test to detect Chlamydia infection.",
+                            IsActive = true,
+                            Price = 40.0,
+                            ServiceName = "Chlamydia Test"
+                        },
+                        new
+                        {
+                            ServiceId = new Guid("c87031b9-f5ea-4494-a2f1-65743f194b8d"),
+                            Description = "Swab or urine test to diagnose Gonorrhea.",
+                            IsActive = true,
+                            Price = 40.0,
+                            ServiceName = "Gonorrhea Test"
+                        },
+                        new
+                        {
+                            ServiceId = new Guid("2bd04214-d426-49c1-b92c-061ca1057aa2"),
+                            Description = "Blood test to detect Syphilis infection.",
+                            IsActive = true,
+                            Price = 45.0,
+                            ServiceName = "Syphilis Test"
+                        });
                 });
 
             modelBuilder.Entity("TestBooking", b =>
@@ -554,8 +586,6 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("FK_User_Role");
 
                     b.Navigation("Role");

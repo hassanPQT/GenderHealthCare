@@ -2,7 +2,7 @@
 using BusinessAccess.Services.Interfaces;
 using GenderHealcareSystem.CustomActionFilters;
 using GenderHealcareSystem.DTO;
-using Microsoft.AspNetCore.Http;
+using GenderHealcareSystem.DTO.Request;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenderHealcareSystem.Controllers
@@ -41,7 +41,7 @@ namespace GenderHealcareSystem.Controllers
             //Get service from database - domain model
             var serviceDomain = await _service.GetByIdAsync(id);
 
-            if (serviceDomain == null) 
+            if (serviceDomain == null)
                 return NotFound();
 
             //Covert domain model to dto
@@ -53,7 +53,7 @@ namespace GenderHealcareSystem.Controllers
         //CREATE NEW SERVICE
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> Create([FromBody] AddServiceRequestDto dto)
+        public async Task<IActionResult> Create([FromBody] AddServiceRequest dto)
         {
             //Convert Dto to domain model
             var serviceDomain = _mapper.Map<Service>(dto);
@@ -71,7 +71,7 @@ namespace GenderHealcareSystem.Controllers
         //UPDATE EXIST SERVICE
         [HttpPut("{id:guid}")]
         [ValidateModel]
-        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateServiceRequestDto dto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateServiceRequest dto)
         {
             //Convert Dto to domain model
             var serviceDomain = _mapper.Map<Service>(dto);
