@@ -1,23 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataAccess.Entities
+namespace GenderHealcareSystem.DTO.Request
 {
-    public class Blog
+    public class AddBlogRequest
     {
-        [Key]
         public Guid BlogId { get; set; }
-
-        [MaxLength(50)]
+        [Required(ErrorMessage = "Tittle is required")]
         public string Tittle { get; set; }
-
+        [Required(ErrorMessage = "Content is required")]
         public string Content { get; set; }
         public DateTime PublistDate { get; set; }
-
-        [MaxLength(10)]
+        [Required(ErrorMessage = "AuthorId is required")]
         public Guid UserId { get; set; }
-
-        [ForeignKey("UserId")]
-        public User User { get; set; }
     }
 }
