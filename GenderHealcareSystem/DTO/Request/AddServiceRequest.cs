@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GenderHealcareSystem.DTO
+namespace GenderHealcareSystem.DTO.Request
 {
-    public class UpdateServiceRequestDto
+    public class AddServiceRequest
     {
         public string ServiceName { get; set; }
         [MaxLength(500)]
@@ -10,6 +10,6 @@ namespace GenderHealcareSystem.DTO
         [Required]
         public double Price { get; set; }
         public bool IsActive { get; set; }
-       
+
     }
 }

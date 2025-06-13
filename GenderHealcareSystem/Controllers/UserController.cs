@@ -3,7 +3,6 @@ using DataAccess.Entities;
 using GenderHealcareSystem.DTO.Request;
 using GenderHealcareSystem.DTO.Response;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -47,7 +46,7 @@ namespace GenderHealcareSystem.Controllers
             return Ok(response);
         }
 
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserProfile(Guid id, [FromBody] UpdateUserRequest request)
         {
@@ -61,10 +60,10 @@ namespace GenderHealcareSystem.Controllers
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
                 Gender = request.Gender,
-                Dob = request.DateOfBirth 
+                Dob = request.DateOfBirth
             };
 
-             userUpdate = await _userService.UpdateAsync(id, userUpdate);
+            userUpdate = await _userService.UpdateAsync(id, userUpdate);
 
             return Ok(new { message = "Profile updated successfully." });
         }
