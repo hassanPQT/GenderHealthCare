@@ -4,6 +4,7 @@ using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250613172812_SeedDataRole")]
+    partial class SeedDataRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -351,7 +354,7 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ServiceId")
+                    b.Property<Guid>("ServiceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDate")
@@ -441,9 +444,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("MedicalHistoryId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Note")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -465,8 +465,6 @@ namespace DataAccess.Migrations
 
                     b.HasKey("TestBookingId");
 
-                    b.HasIndex("MedicalHistoryId");
-
                     b.HasIndex("ServiceId");
 
                     b.HasIndex("StaffId");
@@ -482,6 +480,9 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
+
+                    b.Property<Guid>("MedicalHistoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ResultDate")
                         .HasColumnType("datetime2");
@@ -500,9 +501,6 @@ namespace DataAccess.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("TestBookingId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("TestDate")
                         .HasColumnType("datetime2");
 
@@ -511,9 +509,9 @@ namespace DataAccess.Migrations
 
                     b.HasKey("TestResultId");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("MedicalHistoryId");
 
-                    b.HasIndex("TestBookingId");
+                    b.HasIndex("ServiceId");
 
                     b.HasIndex("UserId");
 
@@ -638,9 +636,12 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("MedicalHistory", b =>
                 {
-                    b.HasOne("Service", null)
+                    b.HasOne("Service", "Service")
                         .WithMany("MedicalHistories")
-                        .HasForeignKey("ServiceId");
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("FK_MedicalHistory_Service");
 
                     b.HasOne("DataAccess.Entities.User", "User")
                         .WithMany("MedicalHistories")
@@ -649,18 +650,13 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_MedicalHistory_User");
 
+                    b.Navigation("Service");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("TestBooking", b =>
                 {
-                    b.HasOne("MedicalHistory", "MedicalHistory")
-                        .WithMany("TestBookings")
-                        .HasForeignKey("MedicalHistoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_TestBooking_MedicalHistory");
-
                     b.HasOne("Service", "Service")
                         .WithMany("TestBookings")
                         .HasForeignKey("ServiceId")
@@ -681,8 +677,6 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_TestBooking_User");
 
-                    b.Navigation("MedicalHistory");
-
                     b.Navigation("Service");
 
                     b.Navigation("Staff");
@@ -692,19 +686,19 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("TestResult", b =>
                 {
+                    b.HasOne("MedicalHistory", "MedicalHistory")
+                        .WithMany("TestResults")
+                        .HasForeignKey("MedicalHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_TestResult_MedicalHistory");
+
                     b.HasOne("Service", "Service")
                         .WithMany("TestResults")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
                         .HasConstraintName("FK_TestResult_Service");
-
-                    b.HasOne("TestBooking", "TestBooking")
-                        .WithMany("TestResults")
-                        .HasForeignKey("TestBookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_TestResult_TestBooking");
 
                     b.HasOne("DataAccess.Entities.User", "User")
                         .WithMany("TestResults")
@@ -713,9 +707,9 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_TestResult_User");
 
-                    b.Navigation("Service");
+                    b.Navigation("MedicalHistory");
 
-                    b.Navigation("TestBooking");
+                    b.Navigation("Service");
 
                     b.Navigation("User");
                 });
@@ -759,7 +753,7 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("MedicalHistory", b =>
                 {
-                    b.Navigation("TestBookings");
+                    b.Navigation("TestResults");
                 });
 
             modelBuilder.Entity("Service", b =>
@@ -770,11 +764,6 @@ namespace DataAccess.Migrations
 
                     b.Navigation("TestBookings");
 
-                    b.Navigation("TestResults");
-                });
-
-            modelBuilder.Entity("TestBooking", b =>
-                {
                     b.Navigation("TestResults");
                 });
 #pragma warning restore 612, 618
