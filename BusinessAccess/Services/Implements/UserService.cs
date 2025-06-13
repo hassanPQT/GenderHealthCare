@@ -23,13 +23,14 @@ namespace BusinessAccess.Services
 
         public async Task AddUser(User user)
         {
-            var checkUser = _userRepository.FindAccountByUserName(user.Username);
-            var checkEmail = _userRepository.FindAccountByEmail(user.Email);
-            if (checkUser.Result != null || checkEmail.Result != null)
+            var checkUser = await _userRepository.FindAccountByUserName(user.Username);
+            var checkEmail = await _userRepository.FindAccountByEmail(user.Email);
+            if (checkUser != null || checkEmail != null)
             {
                 throw new Exception("Username or Email already exists.");
             }
-             await _userRepository.AddUser(user);
+
+            await _userRepository.AddUser(user);
         }
 
         public async Task<User?> FindAccountByEmail(string email)
