@@ -6,7 +6,6 @@ public class MedicalHistory
 {
     [Key]
     public Guid MedicalHistoryId { get; set; } 
-    public Guid ServiceId { get; set; }
     public Guid UserId { get; set; }
     [Required]
     public DateTime StartDate { get; set; }
@@ -14,7 +13,7 @@ public class MedicalHistory
     public DateTime EndDate { get; set; }
     [ForeignKey("UserId")]
     public User User { get; set; }
-    [ForeignKey("ServiceId")]
-    public Service Service { get; set; }
-    public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
+
+    public ICollection<TestBooking> TestBookings { get; set; } = new List<TestBooking>();
+
 }

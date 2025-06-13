@@ -143,11 +143,10 @@ namespace DataAccess.DBContext
                       .HasForeignKey(e => e.UserId)
                       .HasConstraintName("FK_MedicalHistory_User");
 
-                entity.HasOne(e => e.Service)
-                      .WithMany(u => u.MedicalHistories)
-                      .HasForeignKey(e => e.ServiceId)
-                      .OnDelete(DeleteBehavior.NoAction)
-                      .HasConstraintName("FK_MedicalHistory_Service");
+                entity.HasMany(mh => mh.TestBookings)
+                      .WithOne(tb => tb.MedicalHistory)
+                      .HasForeignKey(tb => tb.MedicalHistoryId)
+                      .HasConstraintName("FK_TestBooking_MedicalHistory");
 
 
             });
@@ -163,11 +162,6 @@ namespace DataAccess.DBContext
                       .HasForeignKey(e => e.UserId)
                       .OnDelete(DeleteBehavior.NoAction)
                       .HasConstraintName("FK_TestResult_User");
-
-                entity.HasOne(tr => tr.MedicalHistory)
-                     .WithMany(mh => mh.TestResults)
-                     .HasForeignKey(tr => tr.MedicalHistoryId)
-                     .HasConstraintName("FK_TestResult_MedicalHistory");
             });
 
             modelBuilder.Entity<TestBooking>(entity =>
@@ -187,6 +181,11 @@ namespace DataAccess.DBContext
                     .HasForeignKey(e => e.StaffId)
                     .OnDelete(DeleteBehavior.NoAction)
                     .HasConstraintName("FK_TestBooking_Staff");
+
+                entity.HasMany(tb => tb.TestResults)
+                      .WithOne(tr => tr.TestBooking)
+                      .HasForeignKey(tr => tr.TestBookingId)
+                      .HasConstraintName("FK_TestResult_TestBooking");
             });
 
             modelBuilder.Entity<Appointment>(entity =>
