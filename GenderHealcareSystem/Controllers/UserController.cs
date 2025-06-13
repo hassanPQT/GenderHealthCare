@@ -1,12 +1,4 @@
-﻿using BusinessAccess.Services.Interfaces;
-using DataAccess.Entities;
-using GenderHealcareSystem.DTO.Request;
-using GenderHealcareSystem.DTO.Response;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-
-namespace GenderHealcareSystem.Controllers
+﻿namespace GenderHealcareSystem.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -14,9 +6,11 @@ namespace GenderHealcareSystem.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IMapper _mapper;
+        public UserController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpGet("profile")]
@@ -50,10 +44,23 @@ namespace GenderHealcareSystem.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserProfile(Guid id, [FromBody] UpdateUserRequest request)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return Unauthorized();
+
+            if (!Guid.TryParse(userIdClaim.Value, out Guid userId))
+                return BadRequest("Invalid user ID in token");
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userUpdate = new User
+            var userUpdate = _mapper.Map<User>(request);
+
+            var result = await _userService.UpdateAsync(userId, userUpdate);
+
+            if (result == null)
+                return NotFound();
+
+            var response = new UserResponse
             {
                 FullName = request.FullName,
                 Email = request.Email,
