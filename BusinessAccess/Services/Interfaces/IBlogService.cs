@@ -8,6 +8,6 @@ namespace BusinessAccess.Services.Interfaces
         Task<Blog?> GetByIdAsync(Guid id);
         Task<Blog> CreateAsync(Blog dto);
         Task<Blog?> UpdateAsync(Guid id, Blog dto);
-        Task<bool> DeleteAsync(Guid id);
+        Task<Blog> DeleteAsync(Guid id);
     }
 }

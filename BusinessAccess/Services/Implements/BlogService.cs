@@ -32,9 +32,9 @@ namespace BusinessAccess.Services.Implements
             return _repository.UpdateAsync(id, dto);
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<Blog> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _repository.DeleteAsync(id);
         }
     }
 }
