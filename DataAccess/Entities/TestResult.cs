@@ -21,7 +21,8 @@ public class TestResult
     public Guid ServiceId { get; set; }
     [ForeignKey("ServiceId")]
     public Service Service { get; set; }
-    public Guid MedicalHistoryId { get; set; }
-    [ForeignKey("MedicalHistoryId")]
-    public MedicalHistory MedicalHistory { get; set; }
+    public Guid TestBookingId { get; set; }
+
+    [ForeignKey("TestBookingId")]
+    public TestBooking TestBooking { get; set; }
 }

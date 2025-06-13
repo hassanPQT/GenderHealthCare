@@ -23,5 +23,12 @@ public class TestBooking
     public Service Service { get; set; }
     [ForeignKey("StaffId")]
     [InverseProperty("HandledTestBookings")]
+
+    public Guid MedicalHistoryId { get; set; }
+
+    [ForeignKey("MedicalHistoryId")]
+    public MedicalHistory MedicalHistory { get; set; }
+
+    public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
     public User Staff { get; set; }
 }
