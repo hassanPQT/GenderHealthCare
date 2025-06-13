@@ -15,27 +15,26 @@ namespace DataAccess.Entities
         [Key]
         public Guid UserId { get; set; }
 
-        [MaxLength(10)]
-        public Guid RoleId { get; set; }
+        public Guid? RoleId { get; set; }
 
         [MaxLength(20)]
         public string Username { get; set; }
 
-        [MaxLength(50)]
+        public string? FullName { get; set; }
         public string Password { get; set; }
 
-        public bool Gender { get; set; }
+        public bool? Gender { get; set; }
 
         [MaxLength(50)]
         public string Email { get; set; }
 
         [MaxLength(10)]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [MaxLength(50)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
-        public DateTime Dob { get; set; }
+        public DateOnly? Dob { get; set; }
 
         public bool IsDeleted { get; set; }
 
