@@ -1,4 +1,13 @@
-﻿namespace GenderHealcareSystem.Controllers
+﻿using AutoMapper;
+using BusinessAccess.Services.Interfaces;
+using DataAccess.Entities;
+using GenderHealcareSystem.DTO.Request;
+using GenderHealcareSystem.DTO.Response;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
+namespace GenderHealcareSystem.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
@@ -41,8 +50,8 @@
         }
 
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUserProfile(Guid id, [FromBody] UpdateUserRequest request)
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserRequest request)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null) return Unauthorized();
@@ -62,17 +71,15 @@
 
             var response = new UserResponse
             {
-                FullName = request.FullName,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                Address = request.Address,
-                Gender = request.Gender,
-                Dob = request.DateOfBirth
+                FullName = result.FullName,
+                Email = result.Email,
+                PhoneNumber = result.PhoneNumber,
+                Address = result.Address,
+                DateOfBirth = result.Dob,
+                Gender = result.Gender
             };
 
-            userUpdate = await _userService.UpdateAsync(id, userUpdate);
-
-            return Ok(new { message = "Profile updated successfully." });
+            return Ok(response);
         }
     }
 }
