@@ -123,9 +123,9 @@ namespace GenderHealcareSystem
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseHttpsRedirection();
             app.UseCors(MyAllowSpecificOrigins);
+            app.UseHttpsRedirection();
+           
             app.UseAuthentication();
             app.UseAuthorization();
 
