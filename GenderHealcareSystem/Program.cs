@@ -1,18 +1,4 @@
-﻿
-using BusinessAccess.Services;
-using BusinessAccess.Services.Implements;
-using BusinessAccess.Services.Interfaces;
-using DataAccess.DBContext;
-using DataAccess.Repositories.Implements;
-using DataAccess.Repositories.Interfaces;
-using GenderHealcareSystem.CustomActionFilters;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Respository.IRepositories;
-using Respository.Repositories;
-namespace GenderHealcareSystem
+﻿namespace GenderHealcareSystem
 {
     public class Program
     {
@@ -94,6 +80,12 @@ namespace GenderHealcareSystem
 
             //Add AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+            // convert date time
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+            });
 
             var app = builder.Build();
 

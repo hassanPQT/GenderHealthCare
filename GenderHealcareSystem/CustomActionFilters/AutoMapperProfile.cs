@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using DataAccess.Entities;
-using GenderHealcareSystem.DTO;
-using GenderHealcareSystem.DTO.Request;
-
-namespace GenderHealcareSystem.CustomActionFilters
+﻿namespace GenderHealcareSystem.CustomActionFilters
 {
     public class AutoMapperProfile : Profile
     {
