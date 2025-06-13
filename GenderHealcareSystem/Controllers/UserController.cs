@@ -69,7 +69,7 @@ namespace GenderHealcareSystem.Controllers
             if (result == null)
                 return NotFound();
 
-            var response = new UserResponse
+            var response = new UserUpdateResponse
             {
                 FullName = result.FullName,
                 Email = result.Email,

@@ -17,6 +17,8 @@ namespace GenderHealcareSystem.CustomActionFilters
             .ReverseMap();
             CreateMap<Blog, AddBlogRequest>().ReverseMap();
             CreateMap<Blog, UpdateBlogRequest>().ReverseMap();
+            CreateMap<UpdateUserRequest, User>().ForMember(dest => dest.Dob,
+                opt => opt.MapFrom(src => src.DateOfBirth));
         }
     }
 }
