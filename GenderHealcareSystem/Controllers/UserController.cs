@@ -4,7 +4,6 @@ using DataAccess.Entities;
 using GenderHealcareSystem.DTO.Request;
 using GenderHealcareSystem.DTO.Response;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -50,7 +49,7 @@ namespace GenderHealcareSystem.Controllers
             return Ok(response);
         }
 
-        
+
         [HttpPut("profile")]
         public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserRequest request)
         {
