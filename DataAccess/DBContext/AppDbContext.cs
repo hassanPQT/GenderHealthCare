@@ -51,6 +51,29 @@ namespace DataAccess.DBContext
                 entity.ToTable("Role");
                 entity.HasKey(e => e.RoleId);
                 entity.Property(e => e.RoleId).HasDefaultValueSql("NEWID()").ValueGeneratedOnAdd();
+
+                entity.HasData(
+                    new Role
+                    {
+                        RoleId = Guid.Parse("cb923e1c-ed85-45a8-bc2f-8b78c60b7e28"),
+                        Name = "Customer"
+                    },
+                    new Role
+                    {
+                        RoleId = Guid.Parse("d5cf10f1-1f31-4016-ac13-34667e9ca10d"),
+                        Name = "Staff"
+                    },
+                    new Role
+                    {
+                        RoleId = Guid.Parse("157f0b62-afbb-44ce-91ce-397239875df5"),
+                        Name = "Consultant"
+                    },
+                    new Role
+                    {
+                        RoleId = Guid.Parse("c5b82656-c6a7-49bd-a3fb-3d3e07022d33"),
+                        Name = "Manager"
+                    }
+                );
             });
 
             modelBuilder.Entity<Service>(entity =>
