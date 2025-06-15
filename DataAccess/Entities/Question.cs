@@ -15,12 +15,12 @@ namespace DataAccess.Entities
         public Guid QuestionId { get; set; }
 
         [MaxLength(50)]
-        public string Tittle { get; set; }
+        public string Title { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(500)]
         public string Content { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(500)]
         public string Answer { get; set; }
 
         public DateTime? AnswerDate { get; set; }
