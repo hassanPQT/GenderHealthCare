@@ -10,7 +10,7 @@ namespace GenderHealcareSystem.DTO.Response
         public string? PhoneNumber { get; set; }
 
         [JsonConverter(typeof(DateOnlyJsonConverter))]
-        public DateOnly? DateOfBirth { get; set; }
+        public string? DateOfBirth { get; set; }
         public bool? Gender { get; set; }
         public string? Address { get; set; }
     }

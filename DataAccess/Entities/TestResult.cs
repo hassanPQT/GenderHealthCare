@@ -6,23 +6,29 @@ public class TestResult
 {
     [Key]
     public Guid TestResultId { get; set; }
-    [Required, MaxLength(50)]
-    public string ResultDetail { get; set; }
+
+    [Required]
+    public Guid TestBookingServiceId { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string TestName { get; set; }
+
+    [MaxLength(50)]
+    public string? ResultDetail { get; set; }
+
     [Required]
     public DateTime TestDate { get; set; }
+
     [Required]
     public DateTime SampleReceivedDate { get; set; }
     [Required]
     public DateTime ResultDate { get; set; }
-    public bool Status { get; set; } 
-    public Guid UserId { get; set; }
-    [ForeignKey("UserId")]
-    public User User { get; set; }
-    public Guid ServiceId { get; set; }
-    [ForeignKey("ServiceId")]
-    public Service Service { get; set; }
-    public Guid TestBookingId { get; set; }
 
-    [ForeignKey("TestBookingId")]
-    public TestBooking TestBooking { get; set; }
+    public DateTime? CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+    public bool Status { get; set; }
+    [ForeignKey("TestBookingServiceId")]
+    public TestBookingService TestBookingService { get; set; }
 }
