@@ -73,7 +73,7 @@ namespace GenderHealcareSystem.Controllers
             {
                 return Unauthorized("Invalid username or password.");
             }
-            if (user.IsDeleted)
+            if (!user.IsActive)
             {
                 return Unauthorized("User account is deleted.");
             }
@@ -104,7 +104,7 @@ namespace GenderHealcareSystem.Controllers
                 return BadRequest("Missing refresh token or username.");
 
             var user = await _userService.FindAccountByUserName(request.Username);
-            if (user == null || user.IsDeleted)
+            if (user == null || !user.IsActive)
                 return Unauthorized("Invalid user.");
 
             // Không kiểm tra refresh token (vì không lưu DB)

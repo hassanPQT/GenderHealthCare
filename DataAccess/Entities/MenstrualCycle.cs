@@ -13,6 +13,7 @@ namespace DataAccess.Entities
         [Key]
         public Guid MenstrualCycleId { get; set; }
 
+        [Required]
         public Guid UserId { get; set; }
 
         public DateTime StartDate { get; set; }
@@ -22,8 +23,12 @@ namespace DataAccess.Entities
         public DateTime FertilityWindowEnd { get; set; }
         public DateTime PillReminder { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(500)]
         public string Note { get; set; }
+
+        public DateTime? CreatedAt { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
 
         [ForeignKey("UserId")]
         public User User { get; set; }

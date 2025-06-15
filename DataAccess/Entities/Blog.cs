@@ -11,10 +11,13 @@ namespace DataAccess.Entities
         [MaxLength(50)]
         public string Tittle { get; set; }
 
+        [MaxLength(500)]
         public string Content { get; set; }
         public DateTime PublistDate { get; set; }
 
-        [MaxLength(10)]
+        public bool IsActive { get; set; }
+
+
         public Guid UserId { get; set; }
 
         [ForeignKey("UserId")]

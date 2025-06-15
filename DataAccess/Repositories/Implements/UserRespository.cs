@@ -50,8 +50,8 @@ namespace Respository.Repositories
             user.Email = dto.Email;
             user.PhoneNumber = dto.PhoneNumber;
             user.Address = dto.Address;
-            if (dto.Dob != null)
-                user.Dob = dto.Dob.Value;
+            if (dto.Birthday != null)
+                user.Birthday = dto.Birthday;
             user.Gender = dto.Gender;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();

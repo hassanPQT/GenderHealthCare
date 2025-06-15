@@ -14,26 +14,33 @@ namespace DataAccess.Entities
         [MaxLength(10)]
         public Guid AppointmentId { get; set; }
 
-        public DateTime AppointmentDate { get; set; }
-
-        [MaxLength(10)]
+        [Required]
         public Guid UserId { get; set; }
 
         public Guid? ConsultantId { get; set; }
         [MaxLength(10)]
         public Guid StaffScheduleId { get; set; }
 
+        public DateTime AppointmentDate { get; set; }
         public string MeetingUrl { get; set; }
 
+        [Required]
+        [MaxLength(20)]
+        public string Status { get; set; }
+
+        public DateTime? CreatedAt { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
+
         [ForeignKey("UserId")]
-        [InverseProperty("Appointments")]
+        //[InverseProperty("Appointments")]
         public User User { get; set; }
 
         [ForeignKey("StaffScheduleId")]
         public StaffSchedule StaffSchedule { get; set; }
 
         [ForeignKey("ConsultantId")]
-        [InverseProperty("ConsultingAppointments")]
+        //[InverseProperty("ConsultingAppointments")]
         public User Consultant { get; set; }
     }
 }

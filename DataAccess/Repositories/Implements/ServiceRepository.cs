@@ -58,7 +58,7 @@ namespace DataAccess.Repositories.Implements
 
         public async Task<Service?> UpdateAsync(Guid id, Service dto)
         {
-            var existedService = await GetByIdAsync(id);
+            var existedService = await _context.Services.FindAsync(id);
 
             if (existedService == null)
                 return null;
