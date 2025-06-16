@@ -5,16 +5,23 @@ using System.ComponentModel.DataAnnotations;
 public class MedicalHistory
 {
     [Key]
-    public Guid MedicalHistoryId { get; set; } 
-    public Guid ServiceId { get; set; }
+    public Guid MedicalHistoryId { get; set; }
+
+    [Required]
     public Guid UserId { get; set; }
+
     [Required]
     public DateTime StartDate { get; set; }
+
     [Required]
     public DateTime EndDate { get; set; }
+
+    [StringLength(500)]
+    public string? Note { get; set; }
+
     [ForeignKey("UserId")]
     public User User { get; set; }
-    [ForeignKey("ServiceId")]
-    public Service Service { get; set; }
-    public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
+
+    public ICollection<TestBooking> TestBookings { get; set; }
+
 }

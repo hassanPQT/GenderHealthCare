@@ -42,7 +42,7 @@ namespace GenderHealcareSystem.Controllers
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
-                DateOfBirth = user.Dob,
+                DateOfBirth = user.Birthday,
                 Gender = user.Gender
             };
 
@@ -75,7 +75,7 @@ namespace GenderHealcareSystem.Controllers
                 Email = result.Email,
                 PhoneNumber = result.PhoneNumber,
                 Address = result.Address,
-                DateOfBirth = result.Dob,
+                DateOfBirth = result.Birthday,
                 Gender = result.Gender
             };
 
