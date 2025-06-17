@@ -101,6 +101,8 @@ namespace GenderHealcareSystem
             // Inject Repositories
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
             builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+            builder.Services.AddScoped<IStaffConsultantRepository, StaffConsultantRepository>();
+
 
             // Inject Services
             builder.Services.AddScoped<IServiceService, ServiceService>();
