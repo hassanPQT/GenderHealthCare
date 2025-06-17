@@ -23,7 +23,9 @@ namespace GenderHealcareSystem.DTO.Request
         [MaxLength(50)]
         public string? Address { get; set; }
 
-        public string? Dob { get; set; }
+        public string? Birthday { get; set; }
+
+        public bool IsActive { get; set; }
 
         [Required]
         public Guid RoleId { get; set; }
