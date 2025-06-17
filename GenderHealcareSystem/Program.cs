@@ -107,6 +107,8 @@ namespace GenderHealcareSystem
             // Inject Services
             builder.Services.AddScoped<IServiceService, ServiceService>();
             builder.Services.AddScoped<IBlogService, BlogService>();
+            builder.Services.AddScoped<IStaffConsultantService, StaffConsultantService>();
+
 
             //Add AutoMapper
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
