@@ -1,4 +1,13 @@
-﻿namespace GenderHealcareSystem.Controllers
+﻿using BusinessAccess.Helpers;
+using BusinessAccess.Services.Interfaces;
+using DataAccess.Entities;
+using GenderHealcareSystem.DTO.Request;
+using GenderHealcareSystem.DTO.Response;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GenderHealcareSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

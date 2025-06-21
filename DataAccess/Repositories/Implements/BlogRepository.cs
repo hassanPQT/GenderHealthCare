@@ -21,21 +21,26 @@ namespace DataAccess.Repositories.Implements
 
         public async Task<Blog?> GetByIdAsync(Guid id)
         {
-            return await _context.Blogs.FirstOrDefaultAsync(b => b.UserId == id);
+            return await _context.Blogs.FirstOrDefaultAsync(b => b.BlogId == id);
         }
 
         public async Task<Blog> CreateAsync(Blog blog)
         {
             await _context.Blogs.AddAsync(blog);
             await _context.SaveChangesAsync();
-
-            return await _context.Blogs.FirstOrDefaultAsync(b => b.BlogId == blog.BlogId);
+            blog.User = await _context.Users.FindAsync(blog.UserId);
+            return blog;
         }
 
         public async Task<Blog?> UpdateAsync(Guid id, Blog blog)
         {
-            var existingBlog = await _context.Blogs.FirstOrDefaultAsync(b => b.BlogId == blog.BlogId && b.UserId == id);
-            if (existingBlog != null)
+            if (blog == null)
+            {
+                return null;
+            }
+
+            var existingBlog = await _context.Blogs.FirstOrDefaultAsync(b => b.BlogId == id);
+            if (existingBlog == null)
             {
                 return null;
             }
@@ -51,7 +56,7 @@ namespace DataAccess.Repositories.Implements
         public async Task<Blog> DeleteAsync(Guid id)
         {
             var existingBlog = await _context.Blogs.FirstOrDefaultAsync(b => b.BlogId == id);
-            if (existingBlog != null)
+            if (existingBlog == null)
             {
                 return null;
             }

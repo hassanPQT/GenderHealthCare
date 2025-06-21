@@ -4,7 +4,6 @@ namespace GenderHealcareSystem.DTO.Request
 {
     public class AddBlogRequest
     {
-        public Guid BlogId { get; set; }
         [Required(ErrorMessage = "Tittle is required")]
         public string Tittle { get; set; }
         [Required(ErrorMessage = "Content is required")]
