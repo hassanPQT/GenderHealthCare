@@ -175,11 +175,11 @@ namespace GenderHealcareSystem.Controllers
             }
 
             var resetToken = Guid.NewGuid().ToString();
-            var expiry = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtSettings:ResetTokenValidityMins"]));
+            var resetTokenValidityMins = int.Parse(_configuration["JwtSettings:TokenValidityMins"]);
+            var expiry = DateTime.UtcNow.AddMinutes(resetTokenValidityMins);
 
             var emailService = new EmailHelper(_configuration);
             await emailService.SendResetPasswordEmail(request.Email, resetToken);
-
 
             return Ok(new
             {
@@ -189,7 +189,7 @@ namespace GenderHealcareSystem.Controllers
             });
         }
 
-        [HttpPost("reset-password")]
+        [HttpPost("resetpassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
             if (!ModelState.IsValid)
@@ -199,6 +199,11 @@ namespace GenderHealcareSystem.Controllers
             if (request.NewPassword != request.ConfirmNewPassword)
             {
                 return BadRequest("Passwords do not match.");
+            }
+
+            if (existingUser == null)
+            {
+                return BadRequest("User does not exist");
             }
 
             existingUser.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);

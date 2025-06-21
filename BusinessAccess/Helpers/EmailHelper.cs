@@ -27,7 +27,7 @@ namespace BusinessAccess.Helpers
                 <h2>Password Reset Request</h2>
                 <p>Click the link below to reset your password:</p>
                 <a href='{resetLink}'>Reset Password</a>
-                <p>This link will expire in {int.Parse(_configuration["JwtSettings:ResetTokenValidityMins"])} minutes.</p>
+                <p>This link will expire in {int.Parse(_configuration["JwtSettings:TokenValidityMins"])} minutes.</p>
             ";
 
             message.Body = new TextPart("html") { Text = body };
