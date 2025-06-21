@@ -12,26 +12,28 @@ namespace GenderHealcareSystem.Controllers
     [ApiController]
     public class BlogsController : ControllerBase
     {
-        private readonly IBlogService _service;
+        private readonly IBlogService _blogService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public BlogsController(IBlogService service, IMapper mapper)
+        public BlogsController(IBlogService blogService, IUserService userService, IMapper mapper)
         {
-            _service = service;
+            _blogService = blogService;
+            _userService = userService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var blogsDomain = await _service.GetAllAsync();
+            var blogsDomain = await _blogService.GetAllAsync();
             return Ok(_mapper.Map<IEnumerable<BlogDto>>(blogsDomain));
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
-            var blogDomain = await _service.GetByIdAsync(id);
+            var blogDomain = await _blogService.GetByIdAsync(id);
             if (blogDomain == null)
             {
                 return NotFound();
@@ -44,12 +46,22 @@ namespace GenderHealcareSystem.Controllers
         public async Task<IActionResult> Create([FromBody] AddBlogRequest addBlogRequestDto)
         {
             var blogDomain = _mapper.Map<Blog>(addBlogRequestDto);
-            if (blogDomain.UserId != Guid.Empty && await _service.GetByIdAsync(addBlogRequestDto.UserId) == null)
+            blogDomain.BlogId = Guid.NewGuid();
+            if (blogDomain.UserId != Guid.Empty && await _userService.FindAccountById(addBlogRequestDto.UserId) == null)
             {
                 return BadRequest(new { error = "The UserId does not exist." });
             }
-            blogDomain = await _service.CreateAsync(blogDomain);
-            var blogDto = _mapper.Map<BlogDto>(blogDomain);
+            blogDomain = await _blogService.CreateAsync(blogDomain);
+
+            var blogDto = new BlogDto
+            {
+                BlogId = blogDomain.BlogId,
+                Tittle = blogDomain.Tittle,
+                Content = blogDomain.Content,
+                PublistDate = blogDomain.PublistDate,
+                Author = _mapper.Map<UserDto>(blogDomain.User)
+            };
+
             return CreatedAtAction(nameof(GetById), new { id = blogDto.Author.UserId }, blogDto);
         }
 
@@ -58,7 +70,7 @@ namespace GenderHealcareSystem.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateBlogRequest updateBlogRequest)
         {
             var blogDomain = _mapper.Map<Blog>(updateBlogRequest);
-            blogDomain = await _service.UpdateAsync(id, blogDomain);
+            blogDomain = await _blogService.UpdateAsync(id, blogDomain);
             if (blogDomain == null)
             {
                 return NotFound();
@@ -69,7 +81,7 @@ namespace GenderHealcareSystem.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var blogDomain = await _service.DeleteAsync(id);
+            var blogDomain = await _blogService.DeleteAsync(id);
             if (blogDomain == null)
             {
                 return NotFound();
