@@ -12,6 +12,11 @@ namespace GenderHealcareSystem.DTO.Request
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email format.")]
         public string Email { get; set; }
+
+        [Required]
+        [MaxLength(10)]
+        public string PhoneNumber { get; set; }
+
         [Required(ErrorMessage = "Confirm Password is required.")]
         public string ConfirmPassword { get; set; }
     }
