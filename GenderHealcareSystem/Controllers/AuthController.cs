@@ -1,12 +1,4 @@
-﻿using BusinessAccess.Helpers;
-using BusinessAccess.Services.Interfaces;
-using DataAccess.Entities;
-using GenderHealcareSystem.DTO.Request;
-using GenderHealcareSystem.DTO.Response;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Mvc;
-namespace GenderHealcareSystem.Controllers
+﻿namespace GenderHealcareSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -46,13 +38,15 @@ namespace GenderHealcareSystem.Controllers
             }
 
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
-            Guid customerRole = Guid.Parse("CB923E1C-ED85-45A8-BC2F-8B78C60B7E28");
+
             var newUser = new User
             {
                 Username = request.Username,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                RoleId = customerRole,
+                PhoneNumber = request.PhoneNumber,
+                RoleId = Guid.Parse("cb923e1c-ed85-45a8-bc2f-8b78c60b7e28"),
+                IsActive = true
             };
 
             await _userService.AddUser(newUser);
