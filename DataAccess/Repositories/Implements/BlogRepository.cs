@@ -29,7 +29,7 @@ namespace DataAccess.Repositories.Implements
             await _context.Blogs.AddAsync(blog);
             await _context.SaveChangesAsync();
 
-            return await _context.Blogs.FirstOrDefaultAsync(b => b.UserId == blog.UserId);
+            return await _context.Blogs.FirstOrDefaultAsync(b => b.BlogId == blog.BlogId);
         }
 
         public async Task<Blog?> UpdateAsync(Guid id, Blog blog)

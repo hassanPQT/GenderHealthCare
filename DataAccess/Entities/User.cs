@@ -1,13 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
@@ -71,7 +63,7 @@ namespace DataAccess.Entities
         public ICollection<Blog> Blogs { get; set; }
         public ICollection<Feedback> Feedbacks { get; set; }
         public ICollection<MenstrualCycle> MenstrualCycles { get; set; }
-        
+
 
         [InverseProperty("User")]
         public ICollection<Question> Questions { get; set; }
