@@ -50,6 +50,9 @@ namespace GenderHealcareSystem.Controllers
                 Username = request.Username,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                PhoneNumber = request.PhoneNumber,
+                RoleId = Guid.Parse("cb923e1c-ed85-45a8-bc2f-8b78c60b7e28"),
+                IsActive = true
             };
 
             await _userService.AddUser(newUser);
