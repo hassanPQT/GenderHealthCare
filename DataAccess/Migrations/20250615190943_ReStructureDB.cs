@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -160,7 +159,7 @@ namespace DataAccess.Migrations
                 table: "User",
                 type: "nvarchar(15)",
                 maxLength: 15,
-                nullable: false,
+                nullable: true,
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(10)",

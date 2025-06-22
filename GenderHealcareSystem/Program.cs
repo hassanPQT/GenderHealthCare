@@ -6,6 +6,7 @@ using DataAccess.Repositories.Implements;
 using DataAccess.Repositories.Interfaces;
 using GenderHealcareSystem.Converters;
 using GenderHealcareSystem.CustomActionFilters;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +33,22 @@ namespace GenderHealcareSystem
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddCookie().AddGoogle((options) =>
+            {
+                var clientId = builder.Configuration["Authentication:Google:ClientId"];
+                if (clientId == null)
+                {
+                    throw new ArgumentNullException(nameof(clientId));
+                }
+                var clientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+                if (clientSecret == null)
+                {
+                    throw new ArgumentNullException(nameof(clientSecret));
+                }
+
+                options.ClientId = clientId;
+                options.ClientSecret = clientSecret;
+                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
                         {
                             options.RequireHttpsMetadata = false;
@@ -51,6 +68,7 @@ namespace GenderHealcareSystem
 
                         });
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
             // add scoped repositories
             builder.Services.AddScoped<IUserRespository, UserRespository>();
             builder.Services.AddEndpointsApiExplorer();
@@ -129,7 +147,7 @@ namespace GenderHealcareSystem
             }
             app.UseCors(MyAllowSpecificOrigins);
             app.UseHttpsRedirection();
-           
+
             app.UseAuthentication();
             app.UseAuthorization();
 

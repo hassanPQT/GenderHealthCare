@@ -1,6 +1,4 @@
-﻿using DataAccess.Entities;
-
-namespace GenderHealcareSystem.DTO
+﻿namespace GenderHealcareSystem.DTO
 {
     public class BlogDto
     {
@@ -8,6 +6,6 @@ namespace GenderHealcareSystem.DTO
         public string Tittle { get; set; }
         public string Content { get; set; }
         public DateTime PublistDate { get; set; }
-        public User Author { get; set; }
+        public UserDto Author { get; set; }
     }
 }

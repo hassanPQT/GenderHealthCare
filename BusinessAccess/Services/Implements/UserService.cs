@@ -2,11 +2,6 @@
 using DataAccess.Entities;
 using Microsoft.Extensions.Configuration;
 using Respository.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessAccess.Services
 {
@@ -35,7 +30,7 @@ namespace BusinessAccess.Services
 
         public async Task<User?> FindAccountByEmail(string email)
         {
-           return await _userRepository.FindAccountByEmail(email);
+            return await _userRepository.FindAccountByEmail(email);
         }
 
         public async Task<User?> FindAccountById(Guid userId)
