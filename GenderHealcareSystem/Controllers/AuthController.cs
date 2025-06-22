@@ -1,11 +1,12 @@
-﻿using DataAccess.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using BCrypt.Net;
-using GenderHealcareSystem.DTO.Request;
-using BusinessAccess.Helpers;
-using GenderHealcareSystem.DTO.Response;
+﻿using BusinessAccess.Helpers;
 using BusinessAccess.Services.Interfaces;
+using DataAccess.Entities;
+using GenderHealcareSystem.DTO.Request;
+using GenderHealcareSystem.DTO.Response;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Mvc;
+
 namespace GenderHealcareSystem.Controllers
 {
     [Route("api/[controller]")]
@@ -13,10 +14,12 @@ namespace GenderHealcareSystem.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IAuthService _authService;
         private readonly IConfiguration _configuration;
-        public AuthController(IUserService userService, IConfiguration configuration)
+        public AuthController(IUserService userService, IAuthService authService, IConfiguration configuration)
         {
             _userService = userService;
+            _authService = authService;
             _configuration = configuration;
         }
 
@@ -93,12 +96,122 @@ namespace GenderHealcareSystem.Controllers
                 Username = user.Username,
                 AccessToken = token,
                 ExpiresIn = expiresInMinutes * 60,
-                RefreshToken  = refreshToken            
+                RefreshToken = refreshToken
             };
 
             return Ok(response);
 
         }
+
+        [HttpGet("google/login")]
+        public IActionResult GoogleLogin([FromQuery] string returnUrl = "/")
+        {
+            try
+            {
+                var properties = new AuthenticationProperties
+                {
+                    RedirectUri = Url.Action(nameof(GoogleCallback)),
+                    Items =
+                    {
+                        { "returnUrl", returnUrl }
+                    }
+                };
+
+                return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = "Failed to initiate Google login" });
+            }
+        }
+
+        [HttpGet("googlecallback")]
+        public async Task<IActionResult> GoogleCallback()
+        {
+            try
+            {
+                var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+                if (!authenticateResult.Succeeded)
+                {
+                    return BadRequest("Google authentication failed.");
+                }
+
+                var user = await _authService.HandleGoogleLoginAsync(authenticateResult, _configuration);
+
+                var secretKey = _configuration["JwtSettings:SecretKey"];
+                int expiresInMinutes = int.Parse(_configuration["JwtSettings:TokenValidityMins"]);
+                var token = _authService.GenerateJwtToken(user, secretKey);
+
+                var returnUrl = authenticateResult.Properties.Items["returnUrl"] ?? "/";
+
+                return Ok(new
+                {
+                    accessToken = token,
+                    expiresIn = expiresInMinutes * 60,
+                    returnUrl = returnUrl
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = "Error processing Google callback", details = ex.Message });
+            }
+        }
+
+        [HttpPost("forgotpassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userService.FindAccountByEmail(request.Email);
+            if (user == null || !user.IsActive)
+            {
+                return NotFound("User not found or account is inactive.");
+            }
+
+            var resetToken = Guid.NewGuid().ToString();
+            var resetTokenValidityMins = int.Parse(_configuration["JwtSettings:TokenValidityMins"]);
+            var expiry = DateTime.UtcNow.AddMinutes(resetTokenValidityMins);
+
+            var emailService = new EmailHelper(_configuration);
+            await emailService.SendResetPasswordEmail(request.Email, resetToken);
+
+            return Ok(new
+            {
+                message = "Password reset link has been sent to your email.",
+                resetToken,
+                expiry
+            });
+        }
+
+        [HttpPost("resetpassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existingUser = await _userService.FindAccountByEmail(request.Email);
+            if (request.NewPassword != request.ConfirmNewPassword)
+            {
+                return BadRequest("Passwords do not match.");
+            }
+
+            if (existingUser == null)
+            {
+                return BadRequest("User does not exist");
+            }
+
+            existingUser.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            await _userService.UpdateAsync(existingUser.UserId, existingUser);
+
+            return Ok("Password has been reset successfully.");
+        }
+
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
         {
@@ -125,7 +238,7 @@ namespace GenderHealcareSystem.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-           
+
             return Ok("User logged out successfully.");
         }
 

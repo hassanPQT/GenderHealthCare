@@ -16,12 +16,13 @@ namespace GenderHealcareSystem.CustomActionFilters
 
             // Map Blog
             CreateMap<Blog, BlogDto>()
-            .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User))
-            .ReverseMap();
+                        .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User))
+                        .ReverseMap();
             CreateMap<Blog, AddBlogRequest>().ReverseMap();
             CreateMap<Blog, UpdateBlogRequest>().ReverseMap();
 
             // Map User
+            CreateMap<User, UserDto>().ReverseMap();
             CreateMap<UpdateUserRequest, User>().ForMember(dest => dest.Birthday,
                 opt => opt.MapFrom(src => src.DateOfBirth));
 
