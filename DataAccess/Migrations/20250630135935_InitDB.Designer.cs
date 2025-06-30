@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250610150626_initDB")]
-    partial class initDB
+    [Migration("20250630135935_InitDB")]
+    partial class InitDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,22 +30,35 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("AppointmentId")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("ConsultantId")
+                        .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("MeetingUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid>("StaffScheduleId")
                         .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasMaxLength(10)
@@ -66,21 +79,26 @@ namespace DataAccess.Migrations
                 {
                     b.Property<Guid>("BlogId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<DateTime>("PublistDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Tittle")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("UserId")
                         .HasMaxLength(10)
@@ -97,8 +115,11 @@ namespace DataAccess.Migrations
                 {
                     b.Property<Guid>("MenstrualCycleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -111,8 +132,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Note")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("OvulationDate")
                         .HasColumnType("datetime2");
@@ -123,7 +144,11 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("UserId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("MenstrualCycleId");
@@ -137,37 +162,41 @@ namespace DataAccess.Migrations
                 {
                     b.Property<Guid>("QuestionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Answer")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime?>("AnswerDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("ConsultantId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime>("PublishDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Tittle")
+                    b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("UserId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("QuestionId");
@@ -184,60 +213,117 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("RoleId");
 
                     b.ToTable("Role", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = new Guid("cb923e1c-ed85-45a8-bc2f-8b78c60b7e28"),
+                            Name = "Customer"
+                        },
+                        new
+                        {
+                            RoleId = new Guid("d5cf10f1-1f31-4016-ac13-34667e9ca10d"),
+                            Name = "Staff"
+                        },
+                        new
+                        {
+                            RoleId = new Guid("157f0b62-afbb-44ce-91ce-397239875df5"),
+                            Name = "Consultant"
+                        },
+                        new
+                        {
+                            RoleId = new Guid("c5b82656-c6a7-49bd-a3fb-3d3e07022d33"),
+                            Name = "Manager"
+                        });
                 });
 
             modelBuilder.Entity("DataAccess.Entities.StaffSchedule", b =>
                 {
                     b.Property<Guid>("StaffScheduleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ConsultantId")
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.Property<Guid>("UserId")
-                        .HasMaxLength(10)
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("WorkingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("WorkingTime")
-                        .HasColumnType("time");
-
                     b.HasKey("StaffScheduleId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ConsultantId");
 
                     b.ToTable("StaffSchedule", (string)null);
+                });
+
+            modelBuilder.Entity("DataAccess.Entities.TestBookingService", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TestBookingId")
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("TestBookingId");
+
+                    b.ToTable("TestBookingService", (string)null);
                 });
 
             modelBuilder.Entity("DataAccess.Entities.User", b =>
                 {
                     b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime?>("Dob")
+                    b.Property<string>("Birthday")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -249,30 +335,43 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("Gender")
+                        .HasMaxLength(10)
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<Guid?>("RoleId")
+                        .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("UserId");
 
                     b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("PhoneNumber")
                         .IsUnique();
 
                     b.HasIndex("RoleId");
@@ -287,32 +386,37 @@ namespace DataAccess.Migrations
                 {
                     b.Property<Guid>("FeedbackId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime>("PublishDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasAnnotation("CheckConstraint", "Rating >= 1 AND Rating <= 5");
 
                     b.Property<Guid>("ServiceId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<Guid>("UserId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("FeedbackId");
@@ -328,25 +432,27 @@ namespace DataAccess.Migrations
                 {
                     b.Property<Guid>("MedicalHistoryId")
                         .ValueGeneratedOnAdd()
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ServiceId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("MedicalHistoryId");
 
-                    b.HasIndex("ServiceId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("MedicalHistory", (string)null);
                 });
@@ -355,8 +461,11 @@ namespace DataAccess.Migrations
                 {
                     b.Property<Guid>("ServiceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -364,15 +473,20 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("ServiceName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("ServiceId");
 
@@ -384,7 +498,7 @@ namespace DataAccess.Migrations
                             ServiceId = new Guid("d220feba-eb1e-47d6-bc88-a044dcd45025"),
                             Description = "Blood test to detect HIV antibodies or antigens.",
                             IsActive = true,
-                            Price = 50.0,
+                            Price = 50m,
                             ServiceName = "HIV Test"
                         },
                         new
@@ -392,7 +506,7 @@ namespace DataAccess.Migrations
                             ServiceId = new Guid("92156da3-b20c-4b53-b0e4-748adaea4a75"),
                             Description = "Urine or swab test to detect Chlamydia infection.",
                             IsActive = true,
-                            Price = 40.0,
+                            Price = 40m,
                             ServiceName = "Chlamydia Test"
                         },
                         new
@@ -400,7 +514,7 @@ namespace DataAccess.Migrations
                             ServiceId = new Guid("c87031b9-f5ea-4494-a2f1-65743f194b8d"),
                             Description = "Swab or urine test to diagnose Gonorrhea.",
                             IsActive = true,
-                            Price = 40.0,
+                            Price = 40m,
                             ServiceName = "Gonorrhea Test"
                         },
                         new
@@ -408,7 +522,7 @@ namespace DataAccess.Migrations
                             ServiceId = new Guid("2bd04214-d426-49c1-b92c-061ca1057aa2"),
                             Description = "Blood test to detect Syphilis infection.",
                             IsActive = true,
-                            Price = 45.0,
+                            Price = 45m,
                             ServiceName = "Syphilis Test"
                         });
                 });
@@ -417,34 +531,46 @@ namespace DataAccess.Migrations
                 {
                     b.Property<Guid>("TestBookingId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Note")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid>("ServiceId")
+                    b.Property<Guid>("BookingStaffId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MedicalHistoryId")
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<Guid?>("StaffId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("TestBookingId");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("MedicalHistoryId");
 
                     b.HasIndex("StaffId");
 
@@ -457,42 +583,44 @@ namespace DataAccess.Migrations
                 {
                     b.Property<Guid>("TestResultId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<Guid>("MedicalHistoryId")
+                        .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("ResultDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ResultDetail")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("SampleReceivedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ServiceId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("Status")
+                        .HasMaxLength(20)
                         .HasColumnType("bit");
+
+                    b.Property<Guid>("TestBookingServiceId")
+                        .HasMaxLength(10)
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("TestDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("TestName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("TestResultId");
 
-                    b.HasIndex("MedicalHistoryId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("TestBookingServiceId");
 
                     b.ToTable("TestResult", (string)null);
                 });
@@ -502,7 +630,8 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.User", "Consultant")
                         .WithMany("ConsultingAppointments")
                         .HasForeignKey("ConsultantId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("FK_Appointment_Consultant");
 
                     b.HasOne("DataAccess.Entities.StaffSchedule", "StaffSchedule")
@@ -513,9 +642,9 @@ namespace DataAccess.Migrations
                         .HasConstraintName("FK_Appointment_StaffSchedule");
 
                     b.HasOne("DataAccess.Entities.User", "User")
-                        .WithMany("Appointments")
+                        .WithMany("PatientAppointments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Appointment_User");
 
@@ -531,7 +660,7 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.User", "User")
                         .WithMany("Blogs")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Blog_User");
 
@@ -543,7 +672,7 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.User", "User")
                         .WithMany("MenstrualCycles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_MenstrualCycle_User");
 
@@ -559,9 +688,9 @@ namespace DataAccess.Migrations
                         .HasConstraintName("FK_Question_Consultant");
 
                     b.HasOne("DataAccess.Entities.User", "User")
-                        .WithMany("QuestionsAsked")
+                        .WithMany("Questions")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Question_User");
 
@@ -572,14 +701,35 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("DataAccess.Entities.StaffSchedule", b =>
                 {
-                    b.HasOne("DataAccess.Entities.User", "User")
+                    b.HasOne("DataAccess.Entities.User", "Consultant")
                         .WithMany("StaffSchedules")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ConsultantId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_StaffSchedule_Consultant");
 
-                    b.Navigation("User");
+                    b.Navigation("Consultant");
+                });
+
+            modelBuilder.Entity("DataAccess.Entities.TestBookingService", b =>
+                {
+                    b.HasOne("Service", "Service")
+                        .WithMany("TestBookingServices")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_TestBookingService_Service");
+
+                    b.HasOne("TestBooking", "TestBooking")
+                        .WithMany("TestBookingServices")
+                        .HasForeignKey("TestBookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_TestBookingService_TestBooking");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("TestBooking");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.User", b =>
@@ -587,6 +737,8 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("FK_User_Role");
 
                     b.Navigation("Role");
@@ -604,7 +756,7 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.User", "User")
                         .WithMany("Feedbacks")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_Feedback_User");
 
@@ -615,36 +767,27 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("MedicalHistory", b =>
                 {
-                    b.HasOne("Service", "Service")
-                        .WithMany("MedicalHistories")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_MedicalHistory_Service");
-
                     b.HasOne("DataAccess.Entities.User", "User")
-                        .WithMany("MedicalHistories")
-                        .HasForeignKey("UserId")
+                        .WithOne("MedicalHistory")
+                        .HasForeignKey("MedicalHistory", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_MedicalHistory_User");
-
-                    b.Navigation("Service");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("TestBooking", b =>
                 {
-                    b.HasOne("Service", "Service")
+                    b.HasOne("MedicalHistory", "MedicalHistory")
                         .WithMany("TestBookings")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("MedicalHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_TestBooking_Service");
+                        .HasConstraintName("FK_TestBooking_MedicalHistory");
 
-                    b.HasOne("DataAccess.Entities.User", "Staff")
-                        .WithMany("HandledTestBookings")
+                    b.HasOne("DataAccess.Entities.User", "BookingStaff")
+                        .WithMany("StaffTestBookings")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .HasConstraintName("FK_TestBooking_Staff");
@@ -652,45 +795,27 @@ namespace DataAccess.Migrations
                     b.HasOne("DataAccess.Entities.User", "User")
                         .WithMany("TestBookings")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("FK_TestBooking_User");
 
-                    b.Navigation("Service");
+                    b.Navigation("BookingStaff");
 
-                    b.Navigation("Staff");
+                    b.Navigation("MedicalHistory");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("TestResult", b =>
                 {
-                    b.HasOne("MedicalHistory", "MedicalHistory")
+                    b.HasOne("DataAccess.Entities.TestBookingService", "TestBookingService")
                         .WithMany("TestResults")
-                        .HasForeignKey("MedicalHistoryId")
+                        .HasForeignKey("TestBookingServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_TestResult_MedicalHistory");
+                        .HasConstraintName("FK_TestResult_TestBookingService");
 
-                    b.HasOne("Service", "Service")
-                        .WithMany("TestResults")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_TestResult_Service");
-
-                    b.HasOne("DataAccess.Entities.User", "User")
-                        .WithMany("TestResults")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired()
-                        .HasConstraintName("FK_TestResult_User");
-
-                    b.Navigation("MedicalHistory");
-
-                    b.Navigation("Service");
-
-                    b.Navigation("User");
+                    b.Navigation("TestBookingService");
                 });
 
             modelBuilder.Entity("DataAccess.Entities.Role", b =>
@@ -703,11 +828,14 @@ namespace DataAccess.Migrations
                     b.Navigation("Appointments");
                 });
 
+            modelBuilder.Entity("DataAccess.Entities.TestBookingService", b =>
+                {
+                    b.Navigation("TestResults");
+                });
+
             modelBuilder.Entity("DataAccess.Entities.User", b =>
                 {
                     b.Navigation("AnsweredQuestions");
-
-                    b.Navigation("Appointments");
 
                     b.Navigation("Blogs");
 
@@ -715,35 +843,37 @@ namespace DataAccess.Migrations
 
                     b.Navigation("Feedbacks");
 
-                    b.Navigation("HandledTestBookings");
-
-                    b.Navigation("MedicalHistories");
+                    b.Navigation("MedicalHistory")
+                        .IsRequired();
 
                     b.Navigation("MenstrualCycles");
 
-                    b.Navigation("QuestionsAsked");
+                    b.Navigation("PatientAppointments");
+
+                    b.Navigation("Questions");
 
                     b.Navigation("StaffSchedules");
 
-                    b.Navigation("TestBookings");
+                    b.Navigation("StaffTestBookings");
 
-                    b.Navigation("TestResults");
+                    b.Navigation("TestBookings");
                 });
 
             modelBuilder.Entity("MedicalHistory", b =>
                 {
-                    b.Navigation("TestResults");
+                    b.Navigation("TestBookings");
                 });
 
             modelBuilder.Entity("Service", b =>
                 {
                     b.Navigation("Feedbacks");
 
-                    b.Navigation("MedicalHistories");
+                    b.Navigation("TestBookingServices");
+                });
 
-                    b.Navigation("TestBookings");
-
-                    b.Navigation("TestResults");
+            modelBuilder.Entity("TestBooking", b =>
+                {
+                    b.Navigation("TestBookingServices");
                 });
 #pragma warning restore 612, 618
         }

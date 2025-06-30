@@ -58,23 +58,24 @@ namespace DataAccess.Repositories.Implements
 
 
             if (fromHour.HasValue)
-                query = query.Where(s => s.WorkingTime >= fromHour.Value);
+                query = query.Where(s => s.StartTime >= fromHour.Value);
 
 
             if (toHour.HasValue)
-                query = query.Where(s => s.WorkingTime <= toHour.Value);
+                query = query.Where(s => s.EndTime <= toHour.Value);
 
 
             return await query
                 .Include(s => s.Consultant)
                 .OrderBy(s => s.WorkingDate)
-                .ThenBy(s => s.WorkingTime)
+                .ThenBy(s => s.StartTime)
+                .ThenBy(s => s.EndTime)
                 .ToListAsync();
         }
 
         public async Task<StaffSchedule?> GetByIdAsync(Guid id, Guid staffId)
         {
-            var existedSchedule = await _context.StaffSchedules.FirstOrDefaultAsync(s => s.StaffScheduleId == id);
+            var existedSchedule = await _context.StaffSchedules.Include(s => s.Consultant).FirstOrDefaultAsync(s => s.StaffScheduleId == id);
             if (existedSchedule == null)
                 return null;
             if (existedSchedule.ConsultantId != staffId)
@@ -85,7 +86,7 @@ namespace DataAccess.Repositories.Implements
 
         public async Task<StaffSchedule?> UpdateAsync(Guid id, StaffSchedule dto, Guid staffId)
         {
-            var existedSchedule = await _context.StaffSchedules.FindAsync(id);
+            var existedSchedule = await _context.StaffSchedules.Include(s => s.Consultant).FirstOrDefaultAsync(s => s.StaffScheduleId == id);
             if (existedSchedule == null)
                 return null;
             if (existedSchedule.ConsultantId != staffId)
@@ -93,7 +94,8 @@ namespace DataAccess.Repositories.Implements
 
             existedSchedule.Consultant = await _context.Users.FindAsync(dto.ConsultantId);
             existedSchedule.WorkingDate = dto.WorkingDate;
-            existedSchedule.WorkingTime = dto.WorkingTime;
+            existedSchedule.StartTime = dto.StartTime;
+            existedSchedule.EndTime = dto.EndTime;
             existedSchedule.Status = dto.Status;
             existedSchedule.UpdatedAt = dto.UpdatedAt;
 

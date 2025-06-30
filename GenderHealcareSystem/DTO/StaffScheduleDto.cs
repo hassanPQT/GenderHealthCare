@@ -12,7 +12,8 @@ namespace GenderHealcareSystem.DTO
 
         public DateTime WorkingDate { get; set; }
 
-        public TimeSpan WorkingTime { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
 
         public string? Status { get; set; }
 

@@ -37,6 +37,10 @@ namespace GenderHealcareSystem.CustomActionFilters
 
             // Map Staff Schedule
             CreateMap<StaffSchedule, StaffScheduleDto>().ReverseMap();
+            CreateMap<StaffSchedule, AddScheduleRequest>().ReverseMap();
+            CreateMap<StaffSchedule, UpdateScheduleRequest>().ReverseMap();
+
+
 
         }
     }
