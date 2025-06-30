@@ -14,7 +14,6 @@ namespace DataAccess.Entities
         [Key]
         public Guid StaffScheduleId { get; set; }
 
-        [MaxLength(10)]
         public Guid ConsultantId { get; set; }
 
         public DateTime WorkingDate { get; set; }
@@ -22,15 +21,15 @@ namespace DataAccess.Entities
         public TimeSpan WorkingTime { get; set; }
 
         [MaxLength(10)]
-        public string Status { get; set; }
+        public string? Status { get; set; }
 
         public DateTime? CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
 
         [ForeignKey("ConsultantId")]
-        public User Consultant { get; set; }
+        public User? Consultant { get; set; }
 
-        public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Appointment>? Appointments { get; set; }
     }
 }
