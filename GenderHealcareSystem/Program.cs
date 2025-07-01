@@ -121,6 +121,7 @@ namespace GenderHealcareSystem
             builder.Services.AddScoped<IBlogRepository, BlogRepository>();
             builder.Services.AddScoped<IStaffConsultantRepository, StaffConsultantRepository>();
             builder.Services.AddScoped<IStaffScheduleRepository, StaffScheduleRepository>();
+            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
 
             // Inject Services
@@ -128,6 +129,8 @@ namespace GenderHealcareSystem
             builder.Services.AddScoped<IBlogService, BlogService>();
             builder.Services.AddScoped<IStaffConsultantService, StaffConsultantService>();
             builder.Services.AddScoped<IStaffScheduleService, StaffScheduleService>();
+            builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+
 
 
 
