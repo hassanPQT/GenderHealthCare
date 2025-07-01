@@ -28,6 +28,6 @@ namespace GenderHealcareSystem.DTO
 
         public bool IsActive { get; set; }
 
-        public Role Role { get; set; }
+        public RoleDto? Role { get; set; }
     }
 }

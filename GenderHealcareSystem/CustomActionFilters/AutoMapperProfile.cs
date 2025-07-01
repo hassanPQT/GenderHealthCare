@@ -31,6 +31,17 @@ namespace GenderHealcareSystem.CustomActionFilters
             CreateMap<AddStaffConsultantRequest, User>()
                 .ForMember(dest => dest.RoleId, opt => opt.MapFrom(src => src.RoleId));
             CreateMap<User, UpdateStaffConsultantRequest>().ReverseMap();
+
+            // Map Role
+            CreateMap<Role, RoleDto>().ReverseMap();
+
+            // Map Staff Schedule
+            CreateMap<StaffSchedule, StaffScheduleDto>().ReverseMap();
+            CreateMap<StaffSchedule, AddScheduleRequest>().ReverseMap();
+            CreateMap<StaffSchedule, UpdateScheduleRequest>().ReverseMap();
+
+
+
         }
     }
 }

@@ -120,12 +120,15 @@ namespace GenderHealcareSystem
             builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
             builder.Services.AddScoped<IBlogRepository, BlogRepository>();
             builder.Services.AddScoped<IStaffConsultantRepository, StaffConsultantRepository>();
+            builder.Services.AddScoped<IStaffScheduleRepository, StaffScheduleRepository>();
 
 
             // Inject Services
             builder.Services.AddScoped<IServiceService, ServiceService>();
             builder.Services.AddScoped<IBlogService, BlogService>();
             builder.Services.AddScoped<IStaffConsultantService, StaffConsultantService>();
+            builder.Services.AddScoped<IStaffScheduleService, StaffScheduleService>();
+
 
 
             //Add AutoMapper

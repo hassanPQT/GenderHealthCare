@@ -258,6 +258,12 @@ namespace DataAccess.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -268,9 +274,6 @@ namespace DataAccess.Migrations
 
                     b.Property<DateTime>("WorkingDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<TimeSpan>("WorkingTime")
-                        .HasColumnType("time");
 
                     b.HasKey("StaffScheduleId");
 

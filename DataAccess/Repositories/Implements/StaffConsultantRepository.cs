@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,7 +76,7 @@ namespace DataAccess.Repositories.Implements
                 existedUser.PhoneNumber = dto.PhoneNumber;
                 existedUser.Address = dto.Address;
                 existedUser.Birthday = dto.Birthday;
-                existedUser.RoleId = dto.RoleId;
+                existedUser.Role = await _context.Roles.FindAsync(dto.RoleId);
 
                 _context.Users.Update(existedUser);
                 await _context.SaveChangesAsync();
@@ -98,6 +99,7 @@ namespace DataAccess.Repositories.Implements
         {
             await _context.Users.AddAsync(dto);
             await _context.SaveChangesAsync();
+            dto.Role = await _context.Roles.FindAsync(dto.RoleId);
             var user = await _context.Users.FirstOrDefaultAsync(s => s.UserId == dto.UserId);
             return user;
         }

@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using DataAccess.Entities;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DataAccess.Entities
+namespace GenderHealcareSystem.DTO
 {
-    public class StaffSchedule
+    public class StaffScheduleDto
     {
-
-        [Key]
         public Guid StaffScheduleId { get; set; }
 
         public Guid ConsultantId { get; set; }
@@ -21,16 +15,12 @@ namespace DataAccess.Entities
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
 
-        [MaxLength(10)]
         public string? Status { get; set; }
 
         public DateTime? CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
 
-        [ForeignKey("ConsultantId")]
-        public User? Consultant { get; set; }
-
-        public ICollection<Appointment>? Appointments { get; set; }
+        public UserDto? Consultant { get; set; }
     }
 }

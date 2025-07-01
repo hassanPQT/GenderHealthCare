@@ -46,6 +46,7 @@ namespace GenderHealcareSystem.Controllers
 
             //Covert domain model to dto
             var StaffConsultantDto = _mapper.Map<StaffConsultantDto>(userDomain);
+            StaffConsultantDto.Role = _mapper.Map<RoleDto>(StaffConsultantDto.Role);
 
             return Ok(StaffConsultantDto);
         }
@@ -63,6 +64,7 @@ namespace GenderHealcareSystem.Controllers
 
             //Convert Domain model to Dto
             var StaffConsultantDto = _mapper.Map<StaffConsultantDto>(StaffConsultantDomain);
+            StaffConsultantDto.Role = _mapper.Map<RoleDto>(StaffConsultantDto.Role);
 
             return CreatedAtAction(nameof(GetById), new { id = StaffConsultantDto.UserId, roleId = StaffConsultantDto.RoleId }, StaffConsultantDto);
         }
@@ -83,6 +85,7 @@ namespace GenderHealcareSystem.Controllers
 
             //Convert Domain model to Dto
             var StaffConsultantDto = _mapper.Map<StaffConsultantDto>(StaffConsultantDomain);
+            StaffConsultantDto.Role = _mapper.Map<RoleDto>(StaffConsultantDto.Role);
 
             return Ok(StaffConsultantDto);
         }
