@@ -60,7 +60,7 @@ namespace GenderHealcareSystem.Controllers
             foreach (var appointment in appointmentList)
             {
                 if (appointment.AppointmentDate.Date == dto.AppointmentDate.Date && Math.Abs((appointment.AppointmentDate -dto.AppointmentDate).TotalMinutes) < 60)
-                    return BadRequest("This time of date is already booked! Please another day and time!");
+                    return BadRequest("This time of date is already booked! Please choose another day and time!");
             };
 
             // Create meet service
@@ -98,6 +98,38 @@ namespace GenderHealcareSystem.Controllers
             await emailService.SendAppointmentConfirmationEmail(user.Email, user.FullName, consultant.FullName, appointment.AppointmentDate, appointment.MeetingUrl);
 
             return Ok("Sending email successfully");
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateAppointment([FromRoute] Guid id, [FromBody] UpdateAppointmentRequest dto)
+        {
+            // Map Dto to domain
+            var appointmentDomain = _mapper.Map<Appointment>(dto);
+            appointmentDomain.Status = "Confirmed";
+            appointmentDomain.UpdatedAt = DateTime.Now;
+
+            // Add new Appointment to DB
+            appointmentDomain = await _service.UpdateAsync(id, appointmentDomain);
+
+            if (appointmentDomain == null)
+                return NotFound();
+
+            // Map domain to Dto
+            var appointmentDto = _mapper.Map<AppointmentDto>(appointmentDomain);
+
+            return Ok(appointmentDto);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteAppointment([FromRoute] Guid id)
+        {
+            // Delete appointment in DB
+            var isDeleted = await _service.DeleteAsync(id);
+
+            if (!isDeleted)
+                return NotFound();
+
+            return Ok("Appointment is canceled");
         }
     }
 }

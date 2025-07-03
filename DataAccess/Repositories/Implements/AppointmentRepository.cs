@@ -36,7 +36,9 @@ namespace DataAccess.Repositories.Implements
 
             if (existedAppointment != null)
                 return false;
-            _context.Appointments.Remove(existedAppointment);
+            existedAppointment.Status = "Canceled";
+
+            _context.Appointments.Update(existedAppointment);
             await _context.SaveChangesAsync();
             return true;
         }
@@ -87,11 +89,9 @@ namespace DataAccess.Repositories.Implements
             if (existedAppointment != null)
                 return null;
 
-            existedAppointment.User = await _context.Users.FindAsync(appointment.UserId);
             existedAppointment.Consultant = await _context.Users.FindAsync(appointment.ConsultantId);
             existedAppointment.StaffSchedule = await _context.StaffSchedules.FindAsync(appointment.StaffScheduleId);
             existedAppointment.AppointmentDate = appointment.AppointmentDate;
-            existedAppointment.MeetingUrl = appointment.MeetingUrl;
             existedAppointment.Status = appointment.Status;
             existedAppointment.UpdatedAt = appointment.UpdatedAt;
 
