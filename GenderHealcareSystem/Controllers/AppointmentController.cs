@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BusinessAccess.Helpers;
 using BusinessAccess.Services.Interfaces;
 using DataAccess.Entities;
 using GenderHealcareSystem.DTO;
@@ -14,13 +15,17 @@ namespace GenderHealcareSystem.Controllers
     {
         private readonly IAppointmentService _service;
         private readonly IGoogleMeetService _meetService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public AppointmentController(IAppointmentService service, IGoogleMeetService meetService, IMapper mapper)
+        public AppointmentController(IAppointmentService service, IGoogleMeetService meetService, IUserService userService, IMapper mapper, IConfiguration configuration)
         {
             _service = service;
             _meetService = meetService;
+            _userService = userService;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -49,6 +54,15 @@ namespace GenderHealcareSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateService([FromBody] AddAppointmentRequest dto)
         {
+            // Check duplicate appointment
+            var appointmentList = await _service.GetAllAsync(null, null, null, null, null, null);
+
+            foreach (var appointment in appointmentList)
+            {
+                if (appointment.AppointmentDate.Date == dto.AppointmentDate.Date && Math.Abs((appointment.AppointmentDate -dto.AppointmentDate).TotalMinutes) < 60)
+                    return BadRequest("This time of date is already booked! Please another day and time!");
+            };
+
             // Create meet service
             DateTime startTime = dto.AppointmentDate;
             DateTime endTime = dto.AppointmentDate.AddMinutes(30);
@@ -71,11 +85,19 @@ namespace GenderHealcareSystem.Controllers
             return CreatedAtAction(nameof(GetAppointmentById), new { id = appointmentDto.AppointmentId }, appointmentDto);
         }
 
-        [HttpGet("test-meet")]
-        public async Task<IActionResult> TestMeet([FromServices] IGoogleMeetService googleMeetService)
+
+        [HttpGet("send_email")]
+        public async Task<IActionResult> SendEmail([FromQuery] Guid appointmentId)
         {
-            var link = await googleMeetService.CreateMeetingAsync(DateTime.UtcNow.AddMinutes(10), DateTime.UtcNow.AddMinutes(40));
-            return Ok(new { MeetLink = link });
+            var appointment = await _service.GetByIdAsync(appointmentId);
+
+            var user = await _userService.FindAccountById(appointment.UserId);
+            var consultant = await _userService.FindAccountById(appointment.ConsultantId);
+
+            var emailService = new EmailHelper(_configuration);
+            await emailService.SendAppointmentConfirmationEmail(user.Email, user.FullName, consultant.FullName, appointment.AppointmentDate, appointment.MeetingUrl);
+
+            return Ok("Sending email successfully");
         }
     }
 }

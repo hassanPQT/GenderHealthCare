@@ -17,9 +17,9 @@ namespace DataAccess.Entities
         [Required]
         public Guid UserId { get; set; }
 
-        public Guid? ConsultantId { get; set; }
-        [MaxLength(10)]
-        public Guid? StaffScheduleId { get; set; }
+        public Guid ConsultantId { get; set; }
+
+        public Guid StaffScheduleId { get; set; }
 
         public DateTime AppointmentDate { get; set; }
         public string MeetingUrl { get; set; }
