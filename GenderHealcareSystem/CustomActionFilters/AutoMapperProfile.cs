@@ -47,6 +47,8 @@ namespace GenderHealcareSystem.CustomActionFilters
                 .ForMember(dest => dest.StaffSchedule, opt => opt.MapFrom(src => src.StaffSchedule))
                 .ReverseMap();
 
+            CreateMap<Appointment, AddAppointmentRequest>().ReverseMap();
+
         }
     }
 }

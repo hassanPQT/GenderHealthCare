@@ -130,6 +130,8 @@ namespace GenderHealcareSystem
             builder.Services.AddScoped<IStaffConsultantService, StaffConsultantService>();
             builder.Services.AddScoped<IStaffScheduleService, StaffScheduleService>();
             builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+            builder.Services.AddScoped<IGoogleMeetService, GoogleMeetService>();
+
 
 
 
