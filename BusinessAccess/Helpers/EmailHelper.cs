@@ -40,6 +40,8 @@ namespace BusinessAccess.Helpers
         }
     }
 
+
+
     public class EmailSettings
     {
         public string SmtpServer { get; set; }
