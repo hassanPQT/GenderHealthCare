@@ -10,27 +10,24 @@ namespace DataAccess.Entities
 {
     public class MenstrualCycle
     {
-        [Key]
-        public Guid MenstrualCycleId { get; set; }
+		[Key]
+		public Guid MenstrualCycleId { get; set; }
 
-        [Required]
-        public Guid UserId { get; set; }
+		public Guid UserId { get; set; }
 
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public DateTime OvulationDate { get; set; }
-        public DateTime FertilityWindowStart { get; set; }
-        public DateTime FertilityWindowEnd { get; set; }
-        public DateTime PillReminder { get; set; }
+		public DateOnly StartDate { get; set; }
+		public DateOnly? EndDate { get; set; }
+		public int? PeriodLength { get; set; }
+		public int? CycleLength { get; set; }
+		public DateOnly? OvulationDate { get; set; }
+		public DateOnly? FertilityWindowStart { get; set; }
+		public DateOnly? FertilityWindowEnd { get; set; }
+		public DateOnly? PillReminder { get; set; }
 
-        [MaxLength(500)]
-        public string Note { get; set; }
+		[MaxLength(100)]
+		public string? Note { get; set; }
 
-        public DateTime? CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
-        [ForeignKey("UserId")]
-        public User User { get; set; }
-    }
+		[ForeignKey("UserId")]
+		public User User { get; set; }
+	}
 }

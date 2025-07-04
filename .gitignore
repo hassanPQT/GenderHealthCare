@@ -77,7 +77,8 @@ project.lock.json
 
 project.fragment.lock.json   
 
-  
+appsettings.json
+appsettings.*.json  
 
 # Build directory   
 

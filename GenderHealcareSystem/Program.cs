@@ -69,8 +69,10 @@ namespace GenderHealcareSystem
                         });
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IMenstrualCycleService, MenstrualCycleService>();
             // add scoped repositories
             builder.Services.AddScoped<IUserRespository, UserRespository>();
+            builder.Services.AddScoped<IMenstrualCycleRespository, MenstrualCycleRespository>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
