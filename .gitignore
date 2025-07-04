@@ -105,4 +105,4 @@ publish/
 
 *.sln.docstates 
 
- 
+appsettings.json 

@@ -38,7 +38,43 @@ namespace BusinessAccess.Helpers
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
         }
+
+        public async Task SendAppointmentConfirmationEmail(string toEmail, string customerName, string consultantName, DateTime appointmentTime,string meetingUrl)
+        {
+            var emailSettings = _configuration.GetSection("EmailSettings").Get<EmailSettings>();
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Gender Healthcare", emailSettings.FromEmail));
+            message.To.Add(new MailboxAddress(customerName, toEmail));
+            message.Subject = "Xác nhận cuộc hẹn tư vấn";
+
+            var body = $@"
+        <h2>Xin chào {customerName},</h2>
+        <p>Bạn đã đặt cuộc hẹn tư vấn thành công với chuyên gia <strong>{consultantName}</strong>.</p>
+        <p><strong>Thời gian:</strong> {appointmentTime:dddd, dd/MM/yyyy HH:mm}</p>";
+
+            if (!string.IsNullOrEmpty(meetingUrl))
+            {
+                body += $@"
+        <p><strong>Link cuộc hẹn (Google Meet):</strong> 
+            <a href='{meetingUrl}' target='_blank'>{meetingUrl}</a>
+        </p>";
+            }
+
+            body += "<p>Vui lòng tham gia đúng giờ. Cảm ơn bạn đã tin tưởng Gender Healthcare!</p>";
+
+            message.Body = new TextPart("html") { Text = body };
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(emailSettings.SmtpServer, emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(emailSettings.SmtpUsername, emailSettings.SmtpPassword);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
+
     }
+
+
 
     public class EmailSettings
     {
