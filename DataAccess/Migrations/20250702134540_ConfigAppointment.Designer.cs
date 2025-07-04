@@ -4,6 +4,7 @@ using DataAccess.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250702134540_ConfigAppointment")]
+    partial class ConfigAppointment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,33 +119,34 @@ namespace DataAccess.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("CycleLength")
-                        .HasColumnType("int");
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly?>("EndDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly?>("FertilityWindowEnd")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FertilityWindowEnd")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly?>("FertilityWindowStart")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("FertilityWindowStart")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
+                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<DateOnly?>("OvulationDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("OvulationDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("PeriodLength")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("PillReminder")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly?>("PillReminder")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasMaxLength(10)

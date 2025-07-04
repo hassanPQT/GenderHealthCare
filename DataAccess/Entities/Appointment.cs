@@ -17,8 +17,8 @@ namespace DataAccess.Entities
         [Required]
         public Guid UserId { get; set; }
 
-        public Guid? ConsultantId { get; set; }
-        [MaxLength(10)]
+        public Guid ConsultantId { get; set; }
+
         public Guid StaffScheduleId { get; set; }
 
         public DateTime AppointmentDate { get; set; }
@@ -37,10 +37,10 @@ namespace DataAccess.Entities
         public User User { get; set; }
 
         [ForeignKey("StaffScheduleId")]
-        public StaffSchedule StaffSchedule { get; set; }
+        public StaffSchedule? StaffSchedule { get; set; }
 
         [ForeignKey("ConsultantId")]
         //[InverseProperty("ConsultingAppointments")]
-        public User Consultant { get; set; }
+        public User? Consultant { get; set; }
     }
 }
