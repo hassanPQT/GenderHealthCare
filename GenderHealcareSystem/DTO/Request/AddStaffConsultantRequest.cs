@@ -10,22 +10,16 @@ namespace GenderHealcareSystem.DTO.Request
         public string Username { get; set; }
 
         public string? FullName { get; set; }
-        public string Password { get; set; }
 
         public bool? Gender { get; set; }
-
-        [MaxLength(50)]
-        public string Email { get; set; }
 
         [MaxLength(10)]
         public string? PhoneNumber { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(500)]
         public string? Address { get; set; }
 
         public string? Birthday { get; set; }
-
-        public bool IsActive { get; set; }
 
         [Required]
         public Guid RoleId { get; set; }

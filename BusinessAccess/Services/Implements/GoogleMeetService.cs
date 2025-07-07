@@ -22,8 +22,8 @@ public class GoogleMeetService : IGoogleMeetService
 
     public async Task<string> CreateMeetingAsync(DateTime startTime, DateTime endTime)
     {
-        var clientId = _configuration["Authentication:Google:ClientId"];
-        var clientSecret = _configuration["Authentication:Google:ClientSecret"];
+        var clientId = _configuration["Authentication:Meet:ClientId"];
+        var clientSecret = _configuration["Authentication:Meet:ClientSecret"];
 
         var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
         {

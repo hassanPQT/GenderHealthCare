@@ -59,6 +59,16 @@ namespace GenderHealcareSystem.Controllers
             //Convert Dto to domain model
             var userDomain = _mapper.Map<User>(dto);
 
+            // Config staff
+            var guid = Guid.NewGuid();
+            string[] split = guid.ToString().Split('-');
+            var password = split[0];
+
+            userDomain.Password = BCrypt.Net.BCrypt.HashPassword(password);
+            userDomain.Email = $"{userDomain.Username}@gender.com";
+            userDomain.CreatedAt = DateTime.Now;
+            userDomain.UpdatedAt = DateTime.Now;
+
             //Create user in DB
             var StaffConsultantDomain = await _service.CreateAsync(userDomain);
 
@@ -76,6 +86,10 @@ namespace GenderHealcareSystem.Controllers
         {
             //Convert Dto to domain model
             var StaffConsultantDomain = _mapper.Map<User>(dto);
+
+            //Config staff
+            StaffConsultantDomain.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            StaffConsultantDomain.UpdatedAt = DateTime.Now;
 
             //Update user in DB
             StaffConsultantDomain = await _service.UpdateAsync(id, StaffConsultantDomain, roleId);
