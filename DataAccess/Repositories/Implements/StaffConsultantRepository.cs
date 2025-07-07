@@ -72,11 +72,11 @@ namespace DataAccess.Repositories.Implements
                 existedUser.FullName = dto.FullName;
                 existedUser.Password = dto.Password;
                 existedUser.Gender = dto.Gender;
-                existedUser.Email = dto.Email;
                 existedUser.PhoneNumber = dto.PhoneNumber;
                 existedUser.Address = dto.Address;
                 existedUser.Birthday = dto.Birthday;
                 existedUser.Role = await _context.Roles.FindAsync(dto.RoleId);
+                existedUser.UpdatedAt = dto.UpdatedAt;
 
                 _context.Users.Update(existedUser);
                 await _context.SaveChangesAsync();
