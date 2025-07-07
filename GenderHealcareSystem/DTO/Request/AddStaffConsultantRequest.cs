@@ -11,6 +11,9 @@ namespace GenderHealcareSystem.DTO.Request
 
         public string? FullName { get; set; }
 
+        [EmailAddress]
+        public string PersonalEmail { get; set; }
+
         public bool? Gender { get; set; }
 
         [MaxLength(10)]

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using BusinessAccess.Helpers;
 using BusinessAccess.Services.Interfaces;
 using DataAccess.Entities;
 using GenderHealcareSystem.CustomActionFilters;
 using GenderHealcareSystem.DTO;
 using GenderHealcareSystem.DTO.Request;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace GenderHealcareSystem.Controllers
 {
@@ -13,11 +15,13 @@ namespace GenderHealcareSystem.Controllers
     public class StaffConsultantController : ControllerBase
     {
         private readonly IStaffConsultantService _service;
+        private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public StaffConsultantController(IStaffConsultantService service, IMapper mapper)
+        public StaffConsultantController(IStaffConsultantService service, IConfiguration configuration, IMapper mapper)
         {
             _service = service;
+            _configuration = configuration;
             _mapper = mapper;
         }
 
@@ -66,11 +70,16 @@ namespace GenderHealcareSystem.Controllers
 
             userDomain.Password = BCrypt.Net.BCrypt.HashPassword(password);
             userDomain.Email = $"{userDomain.Username}@gender.com";
+            userDomain.IsActive = true;
             userDomain.CreatedAt = DateTime.Now;
             userDomain.UpdatedAt = DateTime.Now;
 
             //Create user in DB
             var StaffConsultantDomain = await _service.CreateAsync(userDomain);
+
+            // Send email
+            var emailService = new EmailHelper(_configuration);
+            await emailService.SendStaffAccountInfoEmail(dto.PersonalEmail, userDomain.Username, userDomain.FullName, password);
 
             //Convert Domain model to Dto
             var StaffConsultantDto = _mapper.Map<StaffConsultantDto>(StaffConsultantDomain);
