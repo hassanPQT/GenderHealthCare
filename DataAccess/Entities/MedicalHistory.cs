@@ -13,9 +13,6 @@ public class MedicalHistory
     [Required]
     public DateTime StartDate { get; set; }
 
-    [Required]
-    public DateTime EndDate { get; set; }
-
     [StringLength(500)]
     public string? Note { get; set; }
 
