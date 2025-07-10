@@ -70,6 +70,8 @@ namespace GenderHealcareSystem
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IMenstrualCycleService, MenstrualCycleService>();
+            
+
             // add scoped repositories
             builder.Services.AddScoped<IUserRespository, UserRespository>();
             builder.Services.AddScoped<IMenstrualCycleRespository, MenstrualCycleRespository>();
@@ -124,22 +126,29 @@ namespace GenderHealcareSystem
             builder.Services.AddScoped<IStaffConsultantRepository, StaffConsultantRepository>();
             builder.Services.AddScoped<IStaffScheduleRepository, StaffScheduleRepository>();
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+			builder.Services.AddScoped<ITestResultRepository, TestResultRepository>();
+            builder.Services.AddScoped<IMedicalHistoryRepository, MedicalHistoryRepository>();
+            builder.Services.AddScoped<ITestBookingRepository, TestBookingRepository>();
+            builder.Services.AddScoped<ITestBookingServiceRespository, TestBookingServiceRespository>();
 
-
-            // Inject Services
-            builder.Services.AddScoped<IServiceService, ServiceService>();
+			// Inject Services
+			builder.Services.AddScoped<IServiceService, ServiceService>();
             builder.Services.AddScoped<IBlogService, BlogService>();
             builder.Services.AddScoped<IStaffConsultantService, StaffConsultantService>();
             builder.Services.AddScoped<IStaffScheduleService, StaffScheduleService>();
             builder.Services.AddScoped<IAppointmentService, AppointmentService>();
             builder.Services.AddScoped<IGoogleMeetService, GoogleMeetService>();
+            builder.Services.AddScoped<ITestResultService, TestResultService>();
+            builder.Services.AddScoped<IMedicalHistoryService, MedicalHistoryService>();
+            builder.Services.AddScoped<ITestBookingService, TestBookingService>();
+            builder.Services.AddScoped<ITestBookingServiceService, TestBookingServiceService>();
 
 
 
 
 
-            //Add AutoMapper
-            builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+			//Add AutoMapper
+			builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
             // convert date time
             builder.Services.AddControllers().AddJsonOptions(options =>
