@@ -38,7 +38,8 @@ namespace GenderHealcareSystem.Controllers
             var response = new UserResponse
             {
                 Username = user.Username,
-                FullName = user.FullName,
+				RoleId = user.Role.RoleId,
+				FullName = user.FullName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
@@ -81,5 +82,7 @@ namespace GenderHealcareSystem.Controllers
 
             return Ok(response);
         }
+
+
     }
 }
