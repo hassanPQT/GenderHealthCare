@@ -37,8 +37,10 @@ namespace Respository.Repositories
 
         public async Task<User?> FindAccountById(Guid userId)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-        }
+			return await _context.Users
+		    .Include(u => u.Role) 
+		    .FirstOrDefaultAsync(u => u.UserId == userId);
+		}
 
         public async Task<User?> UpdateAsync(Guid id, User dto)
         {
