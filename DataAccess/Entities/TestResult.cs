@@ -14,16 +14,16 @@ public class TestResult
     [MaxLength(50)]
     public string TestName { get; set; }
 
-    [MaxLength(50)]
+    [MaxLength(200)]
     public string? ResultDetail { get; set; }
 
     [Required]
     public DateTime TestDate { get; set; }
 
     [Required]
-    public DateTime SampleReceivedDate { get; set; }
+    public DateTime? SampleReceivedDate { get; set; }
     [Required]
-    public DateTime ResultDate { get; set; }
+    public DateTime? ResultDate { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

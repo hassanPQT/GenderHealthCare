@@ -23,6 +23,7 @@ namespace DataAccess.Repositories.Implements
 			{
 				_context.TestResults.Add(testResult);
 				await _context.SaveChangesAsync();
+				testResult.TestBookingService = await _context.TestBookingServices.FindAsync(testResult.TestBookingServiceId);
 				return testResult;
 			}
 			catch (Exception ex)
@@ -133,13 +134,23 @@ namespace DataAccess.Repositories.Implements
 			}
 		}
 
-		public async Task<TestResult> UpdateTestResultAsync(TestResult testResult)
+		public async Task<TestResult> UpdateTestResultAsync(Guid testResultId, TestResult testResult)
 		{
 			try
 			{
-				_context.TestResults.Update(testResult);
+                var existedResult = await _context.TestResults.FindAsync(testResultId);
+                if (testResult == null)
+                    return null;
+
+				existedResult.ResultDetail = testResult.ResultDetail;
+				existedResult.SampleReceivedDate = testResult.SampleReceivedDate;
+				existedResult.ResultDate = testResult.ResultDate;
+				existedResult.Status = testResult.Status;
+				existedResult.UpdatedAt = testResult.UpdatedAt;
+
+                _context.TestResults.Update(existedResult);
 				await _context.SaveChangesAsync();
-				return testResult;
+				return existedResult;
 			}
 			catch (Exception ex)
 			{
