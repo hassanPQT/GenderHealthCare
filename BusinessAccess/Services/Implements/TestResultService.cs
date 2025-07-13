@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinessAccess.Services.Implements
 {
-	public class TestResultService : ITestResultService
+    public class TestResultService : ITestResultService
 	{
 		private readonly ITestResultRepository _testResultRepository;
 
@@ -29,13 +29,33 @@ namespace BusinessAccess.Services.Implements
 		{
 			return await _testResultRepository.CreateTestResultAsync(testResult);
 		}
-		public async Task<TestResult> UpdateTestResultAsync(TestResult testResult)
+		public async Task<TestResult> UpdateTestResultAsync(Guid testResultId, TestResult testResult)
 		{
-			return await _testResultRepository.UpdateTestResultAsync(testResult);
+			return await _testResultRepository.UpdateTestResultAsync(testResultId, testResult);
 		}
 		public async Task<bool> DeleteTestResultAsync(Guid id)
 		{
 			return await _testResultRepository.DeleteTestResultAsync(id);
 		}
-	}
+
+        public async Task<List<TestResult>> GetTestResultsByUserIdAsync(Guid userId)
+        {
+			return await _testResultRepository.GetTestResultsByUserIdAsync(userId);
+        }
+
+        async Task<List<TestResult>> ITestResultService.GetTestResultsByBookingIdAsync(Guid bookingId)
+        {
+			return await _testResultRepository.GetTestResultsByBookingIdAsync(bookingId);
+        }
+
+        public async Task<List<TestResult>> GetAllTestResultAsync()
+        {
+            return await _testResultRepository.GetAllTestResultAsync();
+        }
+
+        public async Task<List<TestResult>> GetTestResultsByStatusAsync(string status)
+        {
+			return await _testResultRepository.GetTestResultsByStatusAsync(status);
+        }
+    }
 }

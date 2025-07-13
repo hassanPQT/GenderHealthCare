@@ -8,10 +8,13 @@ namespace BusinessAccess.Services.Interfaces
 {
 	public interface ITestResultService
 	{
-		Task<IEnumerable<TestResult>> GetTestResultsByBookingIdAsync(Guid bookingId);
-		Task<TestResult?> GetTestResultByIdAsync(Guid id);
-		Task<TestResult> CreateTestResultAsync(TestResult testResult);
-		Task<TestResult> UpdateTestResultAsync(TestResult testResult);
-		Task<bool> DeleteTestResultAsync(Guid id);
-	}
+        Task<TestResult> CreateTestResultAsync( TestResult testResult);
+        Task<TestResult?> GetTestResultByIdAsync(Guid testResultId);
+        Task<List<TestResult>> GetTestResultsByUserIdAsync(Guid userId);
+        Task<List<TestResult>> GetTestResultsByBookingIdAsync(Guid bookingId);
+        Task<List<TestResult>> GetAllTestResultAsync();
+        Task<TestResult> UpdateTestResultAsync(Guid testResultId, TestResult testResult);
+        Task<bool> DeleteTestResultAsync(Guid testResultId);
+        Task<List<TestResult>> GetTestResultsByStatusAsync(string status);
+    }
 }
