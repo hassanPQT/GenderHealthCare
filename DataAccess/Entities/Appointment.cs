@@ -22,6 +22,9 @@ namespace DataAccess.Entities
         public Guid StaffScheduleId { get; set; }
 
         public DateTime AppointmentDate { get; set; }
+
+        public int Slot { get; set; }
+
         public string MeetingUrl { get; set; }
 
         [Required]

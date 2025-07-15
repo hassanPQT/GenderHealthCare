@@ -39,9 +39,26 @@ namespace BusinessAccess.Helpers
             await client.DisconnectAsync(true);
         }
 
-        public async Task SendAppointmentConfirmationEmail(string toEmail, string customerName, string consultantName, DateTime appointmentTime,string meetingUrl)
+        public async Task SendAppointmentBookingEmail(string toEmail, string customerName, string consultantName, DateTime appointmentTime, int slot, string status, string meetingUrl)
         {
             var emailSettings = _configuration.GetSection("EmailSettings").Get<EmailSettings>();
+
+            string time = "";
+            switch (slot)
+            {
+                case 1:
+                    time = "7 giờ đến 9 giờ";
+                    break;
+                case 2:
+                    time = "9 giờ đến 11 giờ";
+                    break;
+                case 3:
+                    time = "1 giờ đến 3 giờ";
+                    break;
+                case 4:
+                    time = "3 giờ đến 5 giờ";
+                    break;
+            }
 
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Gender Healthcare", emailSettings.FromEmail));
@@ -51,7 +68,8 @@ namespace BusinessAccess.Helpers
             var body = $@"
         <h2>Xin chào {customerName},</h2>
         <p>Bạn đã đặt cuộc hẹn tư vấn thành công với chuyên gia <strong>{consultantName}</strong>.</p>
-        <p><strong>Thời gian:</strong> {appointmentTime:dddd, dd/MM/yyyy HH:mm}</p>";
+        <p><strong>Thời gian:</strong> {time}</p>
+        <p><strong>Ngày:</strong> {appointmentTime:dddd, dd/MM/yyyy}</p>";
 
             if (!string.IsNullOrEmpty(meetingUrl))
             {
@@ -61,7 +79,107 @@ namespace BusinessAccess.Helpers
         </p>";
             }
 
+            body += $@"<p>Trạng thái: <strong>{status}</strong>.</p>";
+
             body += "<p>Vui lòng tham gia đúng giờ. Cảm ơn bạn đã tin tưởng Gender Healthcare!</p>";
+
+            message.Body = new TextPart("html") { Text = body };
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(emailSettings.SmtpServer, emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(emailSettings.SmtpUsername, emailSettings.SmtpPassword);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
+
+        public async Task SendAppointmentUpdateEmail(string toEmail, string customerName, string consultantName, DateTime appointmentTime, int slot, string status, string meetingUrl)
+        {
+            var emailSettings = _configuration.GetSection("EmailSettings").Get<EmailSettings>();
+
+            string time = "";
+            switch (slot)
+            {
+                case 1:
+                    time = "7 giờ đến 9 giờ";
+                    break;
+                case 2:
+                    time = "9 giờ đến 11 giờ";
+                    break;
+                case 3:
+                    time = "1 giờ đến 3 giờ";
+                    break;
+                case 4:
+                    time = "3 giờ đến 5 giờ";
+                    break;
+            }
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Gender Healthcare", emailSettings.FromEmail));
+            message.To.Add(new MailboxAddress(customerName, toEmail));
+            message.Subject = "Cập nhận cuộc hẹn tư vấn";
+
+            var body = $@"
+        <h2>Xin chào {customerName},</h2>
+        <p>Cập nhật cuộc hẹn tư vấn với chuyên gia <strong>{consultantName}</strong>.</p>
+        <p><strong>Thời gian:</strong> {time}</p>
+        <p><strong>Ngày:</strong> {appointmentTime:dddd, dd/MM/yyyy}</p>";
+
+            if (!string.IsNullOrEmpty(meetingUrl))
+            {
+                body += $@"
+        <p><strong>Link cuộc hẹn (Google Meet):</strong> 
+            <a href='{meetingUrl}' target='_blank'>{meetingUrl}</a>
+        </p>";
+            }
+
+            body += $@"<p>Trạng thái: <strong>{status}</strong>.</p>";
+
+            body += "<p>Vui lòng tham gia đúng giờ. Cảm ơn bạn đã tin tưởng Gender Healthcare!</p>";
+
+            message.Body = new TextPart("html") { Text = body };
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync(emailSettings.SmtpServer, emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(emailSettings.SmtpUsername, emailSettings.SmtpPassword);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+        }
+
+        public async Task SendAppointmentCancelEmail(string toEmail, string customerName, string consultantName, DateTime appointmentTime, int slot, string status)
+        {
+            var emailSettings = _configuration.GetSection("EmailSettings").Get<EmailSettings>();
+
+            string time = "";
+            switch (slot)
+            {
+                case 1:
+                    time = "7 giờ đến 9 giờ";
+                    break;
+                case 2:
+                    time = "9 giờ đến 11 giờ";
+                    break;
+                case 3:
+                    time = "1 giờ đến 3 giờ";
+                    break;
+                case 4:
+                    time = "3 giờ đến 5 giờ";
+                    break;
+            }
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Gender Healthcare", emailSettings.FromEmail));
+            message.To.Add(new MailboxAddress(customerName, toEmail));
+            message.Subject = "Huỷ cuộc hẹn tư vấn";
+
+            var body = $@"
+        <h2>Xin chào {customerName},</h2>
+        <p>Cuộc hẹn tư vấn với chuyên gia <strong>{consultantName}</strong> đã bị huỷ!</p>
+        <p><strong>Thời gian:</strong> {time}</p>
+        <p><strong>Ngày:</strong> {appointmentTime:dddd, dd/MM/yyyy}</p>";
+
+            body += $@"<p>Trạng thái: <strong>{status}</strong>.</p>";
+
+            body += "<p>Mọi chi tiết xem tại trang chủ của Gender Health Care!</p>";
 
             message.Body = new TextPart("html") { Text = body };
 
@@ -81,7 +199,7 @@ namespace BusinessAccess.Helpers
             message.To.Add(new MailboxAddress(fullName, toEmail));
             message.Subject = "Thông tin tài khoản Gender Healthcare";
 
-            var loginLink = "https://localhost:5173/login"; 
+            var loginLink = "https://localhost:5173/login";
 
             var body = $@"
         <h2>Chào {fullName},</h2>
