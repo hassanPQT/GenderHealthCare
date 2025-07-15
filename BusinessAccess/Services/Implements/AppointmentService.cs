@@ -28,9 +28,9 @@ namespace BusinessAccess.Services.Implements
             return await _repo.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<Appointment>> GetAllAsync(Guid? customerId, Guid? consultantId, DateTime? fromDate, DateTime? toDate, TimeSpan? fromHour, TimeSpan? toHour)
+        public async Task<IEnumerable<Appointment>> GetAllAsync(Guid? customerId, Guid? consultantId, DateTime? fromDate, DateTime? toDate, int? slot)
         {
-            return await _repo.GetAllAsync(customerId, consultantId, fromDate, toDate, fromHour, toHour);
+            return await _repo.GetAllAsync(customerId, consultantId, fromDate, toDate, slot);
         }
 
         public async Task<Appointment?> GetByIdAsync(Guid id)

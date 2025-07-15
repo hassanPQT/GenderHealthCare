@@ -43,7 +43,7 @@ namespace DataAccess.Repositories.Implements
             return true;
         }
 
-        public async Task<IEnumerable<Appointment>> GetAllAsync(Guid? customerId, Guid? consultantId, DateTime? fromDate, DateTime? toDate, TimeSpan? fromHour, TimeSpan? toHour)
+        public async Task<IEnumerable<Appointment>> GetAllAsync(Guid? customerId, Guid? consultantId, DateTime? fromDate, DateTime? toDate, int? slot)
         {
             var query = _context.Appointments.AsQueryable();
 
@@ -59,15 +59,11 @@ namespace DataAccess.Repositories.Implements
             if (toDate != null)
                 query = query.Where(a => a.AppointmentDate <= toDate);
 
-            if (fromHour != null)
-                query = query.Where(a => a.AppointmentDate.TimeOfDay >= fromHour);
-
-            if (toHour != null)
-                query = query.Where(a => a.AppointmentDate.TimeOfDay <= toHour);
+            if (slot != null)
+                query = query.Where(a => a.Slot == slot);
 
             return await query.Include(a => a.User)
                         .Include(a => a.Consultant)
-                        .Include(a => a.StaffSchedule)
                         .OrderBy(a => a.AppointmentDate)
                         .ThenBy(a => a.AppointmentDate.TimeOfDay)
                         .ToListAsync();
@@ -78,7 +74,6 @@ namespace DataAccess.Repositories.Implements
             return await _context.Appointments
                 .Include(a => a.User)
                 .Include(a => a.Consultant)
-                .Include(a => a.StaffSchedule)
                 .FirstOrDefaultAsync(a => a.AppointmentId == id);
         }
 
@@ -90,8 +85,8 @@ namespace DataAccess.Repositories.Implements
                 return null;
 
             existedAppointment.Consultant = await _context.Users.FindAsync(appointment.ConsultantId);
-            existedAppointment.StaffSchedule = await _context.StaffSchedules.FindAsync(appointment.StaffScheduleId);
             existedAppointment.AppointmentDate = appointment.AppointmentDate;
+            existedAppointment.Slot = appointment.Slot;
             existedAppointment.Status = appointment.Status;
             existedAppointment.UpdatedAt = appointment.UpdatedAt;
 

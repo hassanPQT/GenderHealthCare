@@ -11,5 +11,8 @@ namespace GenderHealcareSystem.DTO.Request
         public Guid StaffScheduleId { get; set; }
 
         public DateTime AppointmentDate { get; set; }
+
+        public int Slot { get; set; }
+
     }
 }
