@@ -29,7 +29,7 @@ namespace GenderHealcareSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAppointments([FromQuery] Guid? customerId, [FromQuery] Guid? consultantId, [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] int? slot)
+        public async Task<IActionResult> GetAllAppointments([FromQuery] Guid? customerId, [FromQuery] Guid? consultantId, [FromQuery] DateOnly? fromDate, [FromQuery] DateOnly? toDate, [FromQuery] int? slot)
         {
             var appointmentDomains = await _service.GetAllAsync(customerId, consultantId, fromDate, toDate, slot);
 
@@ -66,8 +66,30 @@ namespace GenderHealcareSystem.Controllers
             ;
 
             // Create meet service
-            DateTime startTime = dto.AppointmentDate;
-            DateTime endTime = dto.AppointmentDate.AddMinutes(30);
+            DateTime startTime;
+            DateTime endTime;
+
+            switch (dto.Slot)
+            {
+                case 1:
+                    startTime = dto.AppointmentDate.ToDateTime(new TimeOnly(7, 0));
+                    endTime = dto.AppointmentDate.ToDateTime(new TimeOnly(9, 0));
+                    break;
+                case 2:
+                    startTime = dto.AppointmentDate.ToDateTime(new TimeOnly(9, 0));
+                    endTime = dto.AppointmentDate.ToDateTime(new TimeOnly(11, 0));
+                    break;
+                case 3:
+                    startTime = dto.AppointmentDate.ToDateTime(new TimeOnly(13, 0));
+                    endTime = dto.AppointmentDate.ToDateTime(new TimeOnly(15, 0));
+                    break;
+                case 4:
+                    startTime = dto.AppointmentDate.ToDateTime(new TimeOnly(15, 0));
+                    endTime = dto.AppointmentDate.ToDateTime(new TimeOnly(17, 0));
+                    break;
+                default:
+                    return BadRequest("Invalid slot. Please choose from slot 1 to 4.");
+            }
 
             string meetUrl = await _meetService.CreateMeetingAsync(startTime, endTime);
 

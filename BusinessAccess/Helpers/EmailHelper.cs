@@ -39,7 +39,7 @@ namespace BusinessAccess.Helpers
             await client.DisconnectAsync(true);
         }
 
-        public async Task SendAppointmentBookingEmail(string toEmail, string customerName, string consultantName, DateTime appointmentTime, int slot, string status, string meetingUrl)
+        public async Task SendAppointmentBookingEmail(string toEmail, string customerName, string consultantName, DateOnly appointmentTime, int slot, string status, string meetingUrl)
         {
             var emailSettings = _configuration.GetSection("EmailSettings").Get<EmailSettings>();
 
@@ -92,7 +92,7 @@ namespace BusinessAccess.Helpers
             await client.DisconnectAsync(true);
         }
 
-        public async Task SendAppointmentUpdateEmail(string toEmail, string customerName, string consultantName, DateTime appointmentTime, int slot, string status, string meetingUrl)
+        public async Task SendAppointmentUpdateEmail(string toEmail, string customerName, string consultantName, DateOnly appointmentTime, int slot, string status, string meetingUrl)
         {
             var emailSettings = _configuration.GetSection("EmailSettings").Get<EmailSettings>();
 
@@ -145,7 +145,7 @@ namespace BusinessAccess.Helpers
             await client.DisconnectAsync(true);
         }
 
-        public async Task SendAppointmentCancelEmail(string toEmail, string customerName, string consultantName, DateTime appointmentTime, int slot, string status)
+        public async Task SendAppointmentCancelEmail(string toEmail, string customerName, string consultantName, DateOnly appointmentTime, int slot, string status)
         {
             var emailSettings = _configuration.GetSection("EmailSettings").Get<EmailSettings>();
 

@@ -227,7 +227,6 @@ namespace DataAccess.DBContext
                 entity.Property(e => e.AppointmentId).HasMaxLength(10).IsRequired();
                 entity.Property(e => e.UserId).HasMaxLength(10).IsRequired();
                 entity.Property(e => e.ConsultantId).HasMaxLength(10).IsRequired();
-                entity.Property(e => e.StaffScheduleId).HasMaxLength(10).IsRequired();
                 entity.Property(e => e.MeetingUrl).HasMaxLength(255);
                 entity.Property(e => e.Status).HasMaxLength(20).IsRequired();
 
@@ -242,12 +241,6 @@ namespace DataAccess.DBContext
                       .HasForeignKey(e => e.ConsultantId)
                       .OnDelete(DeleteBehavior.Restrict)
                       .HasConstraintName("FK_Appointment_Consultant");
-
-                entity.HasOne(e => e.StaffSchedule)
-                      .WithMany(s => s.Appointments)
-                      .HasForeignKey(e => e.StaffScheduleId)
-                      .OnDelete(DeleteBehavior.Cascade)
-                      .HasConstraintName("FK_Appointment_StaffSchedule");
             });
 
             // StaffSchedule Configuration
