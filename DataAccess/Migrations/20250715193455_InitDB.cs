@@ -129,7 +129,6 @@ namespace DataAccess.Migrations
                     MedicalHistoryId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
@@ -149,15 +148,15 @@ namespace DataAccess.Migrations
                 {
                     MenstrualCycleId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OvulationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FertilityWindowStart = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FertilityWindowEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PillReminder = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    StartDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    PeriodLength = table.Column<int>(type: "int", nullable: true),
+                    CycleLength = table.Column<int>(type: "int", nullable: true),
+                    OvulationDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    FertilityWindowStart = table.Column<DateOnly>(type: "date", nullable: true),
+                    FertilityWindowEnd = table.Column<DateOnly>(type: "date", nullable: true),
+                    PillReminder = table.Column<DateOnly>(type: "date", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -234,7 +233,7 @@ namespace DataAccess.Migrations
                     StaffId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: true),
                     BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     BookingStaffId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -268,12 +267,13 @@ namespace DataAccess.Migrations
                     AppointmentId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
                     ConsultantId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
-                    StaffScheduleId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 10, nullable: false),
-                    AppointmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AppointmentDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Slot = table.Column<int>(type: "int", nullable: false),
                     MeetingUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StaffScheduleId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -285,11 +285,10 @@ namespace DataAccess.Migrations
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Appointment_StaffSchedule",
+                        name: "FK_Appointment_StaffSchedule_StaffScheduleId",
                         column: x => x.StaffScheduleId,
                         principalTable: "StaffSchedule",
-                        principalColumn: "StaffScheduleId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "StaffScheduleId");
                     table.ForeignKey(
                         name: "FK_Appointment_User",
                         column: x => x.UserId,

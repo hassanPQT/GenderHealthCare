@@ -29,8 +29,8 @@ namespace DataAccess.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("AppointmentDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("AppointmentDate")
+                        .HasColumnType("date");
 
                     b.Property<Guid>("ConsultantId")
                         .HasMaxLength(10)
@@ -47,8 +47,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("Slot")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("StaffScheduleId")
-                        .HasMaxLength(10)
+                    b.Property<Guid?>("StaffScheduleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -630,12 +629,9 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Appointment_Consultant");
 
-                    b.HasOne("DataAccess.Entities.StaffSchedule", "StaffSchedule")
+                    b.HasOne("DataAccess.Entities.StaffSchedule", null)
                         .WithMany("Appointments")
-                        .HasForeignKey("StaffScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Appointment_StaffSchedule");
+                        .HasForeignKey("StaffScheduleId");
 
                     b.HasOne("DataAccess.Entities.User", "User")
                         .WithMany("PatientAppointments")
@@ -645,8 +641,6 @@ namespace DataAccess.Migrations
                         .HasConstraintName("FK_Appointment_User");
 
                     b.Navigation("Consultant");
-
-                    b.Navigation("StaffSchedule");
 
                     b.Navigation("User");
                 });

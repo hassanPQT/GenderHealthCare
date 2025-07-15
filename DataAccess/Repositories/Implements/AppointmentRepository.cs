@@ -25,7 +25,7 @@ namespace DataAccess.Repositories.Implements
             await _context.SaveChangesAsync();
             appointment.User = await _context.Users.FindAsync(appointment.UserId);
             appointment.Consultant = await _context.Users.FindAsync(appointment.ConsultantId);
-            appointment.StaffSchedule = await _context.StaffSchedules.FindAsync(appointment.StaffScheduleId);
+            
 
             return appointment;
         }
@@ -43,7 +43,7 @@ namespace DataAccess.Repositories.Implements
             return true;
         }
 
-        public async Task<IEnumerable<Appointment>> GetAllAsync(Guid? customerId, Guid? consultantId, DateTime? fromDate, DateTime? toDate, int? slot)
+        public async Task<IEnumerable<Appointment>> GetAllAsync(Guid? customerId, Guid? consultantId, DateOnly? fromDate, DateOnly? toDate, int? slot)
         {
             var query = _context.Appointments.AsQueryable();
 
@@ -65,7 +65,6 @@ namespace DataAccess.Repositories.Implements
             return await query.Include(a => a.User)
                         .Include(a => a.Consultant)
                         .OrderBy(a => a.AppointmentDate)
-                        .ThenBy(a => a.AppointmentDate.TimeOfDay)
                         .ToListAsync();
         }
 
