@@ -12,7 +12,7 @@ namespace GenderHealcareSystem.DTO.Request
         [MaxLength(50)]
         public string TestName { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(500)]
         public string? ResultDetail { get; set; }
 
     }
