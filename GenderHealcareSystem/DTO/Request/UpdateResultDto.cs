@@ -4,7 +4,7 @@ namespace GenderHealcareSystem.DTO.Request
 {
     public class UpdateResultDto
     {
-        [MaxLength(200)]
+        [MaxLength(500)]
         public string? ResultDetail { get; set; }
 
         public DateTime? SampleReceivedDate { get; set; }
