@@ -24,6 +24,6 @@ namespace GenderHealcareSystem.DTO
 
         public DateTime? UpdatedAt { get; set; }
         public bool Status { get; set; }
-        public TestBookingService TestBookingService { get; set; }
+        public TestBookingServiceDto TestBookingService { get; set; }
     }
 }

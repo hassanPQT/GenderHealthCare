@@ -88,7 +88,11 @@ namespace DataAccess.Repositories.Implements
 		public async Task<IEnumerable<TestBooking>> GetBookingsByUserIdAsync(Guid userId)
 		{
 			return await _context.TestBookings
-				.Where(tb => tb.UserId == userId)
+                .Include(tb => tb.User)
+                .Include(tb => tb.BookingStaff)
+                .Include(tb => tb.TestBookingServices)
+                 .ThenInclude(tbs => tbs.TestResults)
+                .Where(tb => tb.UserId == userId)
 				.OrderByDescending(tb => tb.BookingDate)
 				.ToListAsync();
 		}

@@ -287,8 +287,16 @@ namespace GenderHealcareSystem.Controllers
 				Status = booking.Status,
 				Note = booking.Note,
 				Services = services,
-				TotalPrice = totalPrice
-			});
+				TotalPrice = totalPrice,
+                TestBookingServices = booking.TestBookingServices.Select(tbs => new
+                {
+                    tbs.Id,
+                    tbs.ServiceId,
+                    tbs.Service?.ServiceName,
+                    tbs.Service?.Price,
+                    tbs.TestResults
+                })
+            });
 		}
 
 		[HttpGet("bookings-by-status")]
