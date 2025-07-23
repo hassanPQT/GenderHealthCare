@@ -49,9 +49,14 @@ namespace GenderHealcareSystem.CustomActionFilters
             CreateMap<Appointment, UpdateAppointmentRequest>().ReverseMap();
 
             // Map test result
-            CreateMap<TestResult, TestResultDto>().ReverseMap();
+            CreateMap<TestResult, TestResultDto>()
+                .ForMember(dest => dest.TestBookingService, opt => opt.MapFrom(src => src.TestBookingService))
+                .ReverseMap();
             CreateMap<TestResult, AddResultDto>().ReverseMap();
             CreateMap<TestResult, UpdateResultDto>().ReverseMap();
+
+            // Map test booking service
+            CreateMap<TestBookingService, TestBookingServiceDto>().ReverseMap();
 
 
         }
