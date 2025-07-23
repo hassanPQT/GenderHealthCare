@@ -13,6 +13,6 @@ namespace GenderHealcareSystem.DTO
 
         public TestBooking TestBooking { get; set; }
         public Service Service { get; set; }
-        public ICollection<TestResult> TestResults { get; set; }
+        //public ICollection<TestResult> TestResults { get; set; }
     }
 }
