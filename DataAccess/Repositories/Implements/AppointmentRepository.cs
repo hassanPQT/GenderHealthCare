@@ -34,7 +34,7 @@ namespace DataAccess.Repositories.Implements
         {
             var existedAppointment = await _context.Appointments.FindAsync(id);
 
-            if (existedAppointment != null)
+            if (existedAppointment == null)
                 return false;
             existedAppointment.Status = "Canceled";
 
