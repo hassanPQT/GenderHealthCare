@@ -284,6 +284,7 @@ namespace GenderHealcareSystem.Controllers
 			return Ok(new
 			{
 				BookingId = booking.TestBookingId,
+				UserId = booking.UserId,
 				BookingDate = booking.BookingDate,
 				Status = booking.Status,
 				Note = booking.Note,
