@@ -168,7 +168,7 @@ namespace GenderHealcareSystem.Controllers
                 return NotFound();
 
             // Send email
-            await SendEmail(id, 2);
+            await SendEmail(id, 3);
 
             return Ok("Appointment is canceled");
         }
