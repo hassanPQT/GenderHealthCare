@@ -27,6 +27,11 @@ namespace BusinessAccess.Services.Implements
 			return await _testBookingRespository.DeleteTestBookingAsync(testBookingId);
 		}
 
+		public async Task<IEnumerable<TestBooking>> GetAllBookingsByStatusAsync(string status)
+		{
+			return await _testBookingRespository.GetAllBookingsByStatusAsync(status);
+		}
+
 		public async Task<IEnumerable<TestBooking>> GetAllTestBookingsAsync()
 		{
 			return await _testBookingRespository.GetAllTestBookingsAsync();
