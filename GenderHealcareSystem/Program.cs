@@ -156,6 +156,12 @@ namespace GenderHealcareSystem
                 options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
             });
 
+            builder.Services.AddControllers().AddJsonOptions(x =>
+            {
+                x.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                x.JsonSerializerOptions.MaxDepth = 64; // Tăng giới hạn nếu cần
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

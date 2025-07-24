@@ -107,6 +107,7 @@ namespace GenderHealcareSystem.Controllers
 
             //Convert domain to Dto
             var resultDto = _mapper.Map<TestResultDto>(resultDomain);
+            resultDto.TestBookingService = _mapper.Map<TestBookingServiceDto>(resultDto.TestBookingService);
 
             return CreatedAtAction(nameof(GetResultById), new { id = resultDomain.TestResultId }, resultDomain);
         }

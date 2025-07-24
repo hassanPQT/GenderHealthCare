@@ -25,7 +25,7 @@ public class LocalhostCodeReceiver : ICodeReceiver
         var code = context.Request.QueryString["code"];
         var error = context.Request.QueryString["error"];
 
-        var responseHtml = "<html><body><h2>✅ Đăng nhập thành công! Bạn có thể đóng tab này.</h2></body></html>";
+        var responseHtml = "<html><body><h2>✅ Successfully!.</h2></body></html>";
         var buffer = Encoding.UTF8.GetBytes(responseHtml);
         context.Response.ContentLength64 = buffer.Length;
         await context.Response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
