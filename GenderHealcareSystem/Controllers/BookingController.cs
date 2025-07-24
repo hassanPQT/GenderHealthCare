@@ -144,6 +144,7 @@ namespace GenderHealcareSystem.Controllers
 			});
 		}
 
+
 		[HttpPut("cancel/{bookingId}")]
 		public async Task<IActionResult> CancelBooking(Guid bookingId)
 		{
@@ -315,6 +316,36 @@ namespace GenderHealcareSystem.Controllers
 
 			// Gọi service để lấy danh sách booking theo status
 			var bookings = await _testBookingService.GetBookingsByStatusAsync(userId, status.ToUpper());
+
+			var response = bookings.Select(booking => new
+			{
+				BookingId = booking.TestBookingId,
+				BookingDate = booking.BookingDate,
+				Status = booking.Status,
+				Note = booking.Note,
+				ServiceCount = booking.TestBookingServices?.Count ?? 0,
+				TotalPrice = booking.TestBookingServices?.Sum(tbs => tbs.Service?.Price ?? 0) ?? 0
+			});
+
+			return Ok(response);
+		}
+
+		[HttpGet("Admin-by-status")]
+		[Authorize]
+		public async Task<IActionResult> GetAllBookingsByStatus([FromQuery] string status)
+		{
+			if (string.IsNullOrWhiteSpace(status))
+				return BadRequest("Status is required.");
+
+			var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+			if (userIdClaim == null)
+				return Unauthorized();
+
+			if (!Guid.TryParse(userIdClaim.Value, out Guid userId))
+				return BadRequest("Invalid user ID in token");
+
+			// Gọi service để lấy danh sách booking theo status
+			var bookings = await _testBookingService.GetAllBookingsByStatusAsync(status.ToUpper());
 
 			var response = bookings.Select(booking => new
 			{

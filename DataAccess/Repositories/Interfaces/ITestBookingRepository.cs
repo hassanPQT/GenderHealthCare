@@ -21,5 +21,6 @@ namespace DataAccess.Repositories.Interfaces
 		Task<TestBooking?> GetBookingByUserIdAndDateAsync(Guid userId, DateTime bookingDate);
 
 		Task<IEnumerable<TestBooking>> GetBookingsByStatusAsync(Guid userId, string status);
+
 	}
 }
