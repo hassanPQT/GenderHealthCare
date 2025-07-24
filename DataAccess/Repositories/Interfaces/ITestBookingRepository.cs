@@ -22,5 +22,7 @@ namespace DataAccess.Repositories.Interfaces
 
 		Task<IEnumerable<TestBooking>> GetBookingsByStatusAsync(Guid userId, string status);
 
+		Task<IEnumerable<TestBooking>> GetAllBookingsByStatusAsync(string status);
+
 	}
 }

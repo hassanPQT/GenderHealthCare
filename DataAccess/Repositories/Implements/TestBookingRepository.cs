@@ -1,4 +1,5 @@
 ﻿using DataAccess.DBContext;
+using DataAccess.Entities;
 using DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -48,6 +49,15 @@ namespace DataAccess.Repositories.Implements
 			{
 				throw new Exception($"Error deleting test booking: {ex.Message}");
 			}
+		}
+
+		public async Task<IEnumerable<TestBooking>> GetAllBookingsByStatusAsync(string status)
+		{
+			return await _context.TestBookings
+		   .Include(tb => tb.TestBookingServices)
+			   .ThenInclude(tbs => tbs.Service)
+		   .Where(tb => tb.Status == status)
+		   .ToListAsync();
 		}
 
 		public async Task<IEnumerable<TestBooking>> GetAllTestBookingsAsync()

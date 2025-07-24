@@ -19,5 +19,6 @@ namespace BusinessAccess.Services.Interfaces
 		Task<MedicalHistory?> GetMedicalHistoryByUserIdAsync(Guid userId);
 		Task<TestBooking?> GetBookingByUserIdAndDateAsync(Guid userId, DateTime bookingDate);
 		Task<IEnumerable<TestBooking>> GetBookingsByStatusAsync(Guid userId, string status);
+		Task<IEnumerable<TestBooking>> GetAllBookingsByStatusAsync(string status);
 	}
 }
